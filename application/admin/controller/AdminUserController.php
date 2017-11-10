@@ -1,9 +1,9 @@
 <?php
 namespace app\admin\controller;
 
-use app\admin\model\AdminUser;
-use app\admin\model\AuthGroup;
-use app\admin\model\AuthGroupAccess;
+use app\common\model\AdminUser;
+use app\common\model\AuthGroup;
+use app\common\model\AuthGroupAccess;
 use app\common\controller\AdminBaseController;
 use think\Config;
 use think\Db;

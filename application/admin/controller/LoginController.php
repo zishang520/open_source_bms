@@ -1,12 +1,12 @@
 <?php
 namespace app\admin\controller;
 
-use app\admin\model\AdminUser;
+use app\common\model\AdminUser;
 use think\Config;
 use think\Controller;
 use think\Db;
 use think\Session;
-use app\admin\model\AdminUser as AdminUserModel;
+use app\common\model\AdminUser as AdminUserModel;
 
 /**
  * 后台登录

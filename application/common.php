@@ -1,5 +1,6 @@
 <?php
 
+use think\Collection;
 use think\Db;
 
 /**
@@ -81,16 +82,21 @@ function get_articles_by_cid_paged($cid, $page_size = 15, $where = [], $order = 
  */
 function array2level($array, $pid = 0, $level = 1)
 {
-    static $list = [];
-    foreach ($array as $v) {
-        if ($v['pid'] == $pid) {
-            $v['level'] = $level;
-            $list[]     = $v;
-            array2level($array, $v['id'], $level + 1);
-        }
+    if ($array instanceof Collection) {
+        $array = $array->toArray();
     }
-
-    return $list;
+    $fn = function ($pid, $level) use (&$array, &$fn) {
+        static $list = [];
+        foreach ($array as &$v) {
+            if ($v['pid'] == $pid) {
+                $v['level'] = $level;
+                $list[] = $v;
+                $fn($v['id'], $level + 1);
+            }
+        }
+        return $list;
+    };
+    return $fn($pid, $level);
 }
 
 /**
@@ -102,6 +108,9 @@ function array2level($array, $pid = 0, $level = 1)
  */
 function array2tree(&$array, $pid_name = 'pid', $child_key_name = 'children')
 {
+    if ($array instanceof Collection) {
+        $array = $array->toArray();
+    }
     $counter = array_children_count($array, $pid_name);
     if (!isset($counter[0]) || $counter[0] == 0) {
         return $array;
@@ -237,3 +246,127 @@ function check_mobile_number($mobile)
     return preg_match($reg, $mobile) ? true : false;
 }
 
+/**
+ * [hidden_mobile 隐藏手机号中间4位]
+ * @Author    ZiShang520@gmail.com
+ * @DateTime  2017-09-18T17:15:39+0800
+ * @copyright (c)                      ZiShang520 All           Rights Reserved
+ * @param     [type]                   $mobile    [description]
+ * @return    [type]                              [description]
+ */
+function hidden_mobile($mobile)
+{
+    return preg_replace('/^(\d{3})\d{4}(\d{4})$/', '$1****$2', $mobile);
+}
+
+/**
+ * 截取编码为utf8的字符串
+ *
+ * @param string $strings 预处理字符串
+ * @param int $start 开始处 eg:0
+ * @param int $length 截取长度
+ */
+function subString($strings, $start, $length)
+{
+    if (function_exists('mb_substr') && function_exists('mb_strlen')) {
+        $sub_str = mb_substr($strings, $start, $length, 'utf8');
+        return mb_strlen($sub_str, 'utf8') < mb_strlen($strings, 'utf8') ? $sub_str . '...' : $sub_str;
+    }
+    $str = substr($strings, $start, $length);
+    $char = 0;
+    for ($i = 0; $i < strlen($str); $i++) {
+        if (ord($str[$i]) >= 128) {
+            $char++;
+        }
+
+    }
+    $str2 = substr($strings, $start, $length + 1);
+    $str3 = substr($strings, $start, $length + 2);
+    if ($char % 3 == 1) {
+        if ($length <= strlen($strings)) {
+            $str3 = $str3 .= '...';
+        }
+        return $str3;
+    }
+    if ($char % 3 == 2) {
+        if ($length <= strlen($strings)) {
+            $str2 = $str2 .= '...';
+        }
+        return $str2;
+    }
+    if ($char % 3 == 0) {
+        if ($length <= strlen($strings)) {
+            $str = $str .= '...';
+        }
+        return $str;
+    }
+}
+/**
+ * [my_date_diff 时间验证器]
+ * @Author    ZiShang520@gmail.com
+ * @DateTime  2017-09-22T11:26:00+0800
+ * @copyright (c)                      ZiShang520 All           Rights Reserved
+ * @param     [type]                   $data2     [description]
+ * @return    [type]                              [description]
+ */
+function my_date_diff($data2)
+{
+    return intval((new DateTime(date('Y-m-d')))->diff(new DateTime($data2))->format('%R%a'));
+}
+
+if (!function_exists('random_int')) {
+    /**
+     * [random_int Random_int兼容低版本]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2017-10-25T13:23:19+0800
+     * @copyright (c)                      ZiShang520 All           Rights Reserved
+     * @param     [type]                   $min       [description]
+     * @param     [type]                   $max       [description]
+     * @return    [type]                              [description]
+     */
+    function random_int($min, $max)
+    {
+        if (!function_exists('mcrypt_create_iv')) {
+            trigger_error(
+                'mcrypt must be loaded for random_int to work',
+                E_USER_WARNING
+            );
+            return null;
+        }
+
+        if (!is_int($min) || !is_int($max)) {
+            trigger_error('$min and $max must be integer values', E_USER_NOTICE);
+            $min = (int) $min;
+            $max = (int) $max;
+        }
+
+        if ($min > $max) {
+            trigger_error('$max can\'t be lesser than $min', E_USER_WARNING);
+            return null;
+        }
+
+        $range = $counter = $max - $min;
+        $bits = 1;
+
+        while ($counter >>= 1) {
+            ++$bits;
+        }
+
+        $bytes = (int) max(ceil($bits / 8), 1);
+        $bitmask = pow(2, $bits) - 1;
+
+        if ($bitmask >= PHP_INT_MAX) {
+            $bitmask = PHP_INT_MAX;
+        }
+
+        do {
+            $result = hexdec(
+                bin2hex(
+                    mcrypt_create_iv($bytes, MCRYPT_DEV_URANDOM)
+                )
+            ) & $bitmask;
+        } while ($result > $range);
+
+        return $result + $min;
+    }
+}
