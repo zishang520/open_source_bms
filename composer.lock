@@ -4,20 +4,101 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf1ef1b4de0424400740006e6b13b270",
+    "hash": "585adc720885f75ef2fc7ecedeb9969b",
+    "content-hash": "5c13b9aa2048e082fdcb901285ee84ed",
     "packages": [
         {
-            "name": "topthink/framework",
-            "version": "v5.0.10",
+            "name": "luoyy/blade",
+            "version": "5.5.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/top-think/framework.git",
-                "reference": "e428c43ec5138c989cfdb38ac300a964ad77f9cb"
+                "url": "https://github.com/zishang520/blade.git",
+                "reference": "5fdac8a7ddd9b27168dfc856d2d5931c6e745720"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/framework/e428c43ec5138c989cfdb38ac300a964ad77f9cb.zip",
-                "reference": "e428c43ec5138c989cfdb38ac300a964ad77f9cb",
+                "url": "https://files.phpcomposer.com/files/zishang520/blade/5fdac8a7ddd9b27168dfc856d2d5931c6e745720.zip",
+                "reference": "5fdac8a7ddd9b27168dfc856d2d5931c6e745720",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "luoyy\\Blade\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "luoyy",
+                    "email": "zishang520@gmail.com"
+                }
+            ],
+            "description": "an independent version of laravel view template - blade",
+            "homepage": "http://www.luoyy.com",
+            "time": "2017-11-08 06:10:37"
+        },
+        {
+            "name": "luoyy/think-blade",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zishang520/think-blade.git",
+                "reference": "f77b48bfe15739803e860f350ccaaaebfbee2ba2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/zishang520/think-blade/f77b48bfe15739803e860f350ccaaaebfbee2ba2.zip",
+                "reference": "f77b48bfe15739803e860f350ccaaaebfbee2ba2",
+                "shasum": ""
+            },
+            "require": {
+                "luoyy/blade": "^5.5",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    {
+                        "think\\view\\driver\\Blade": "drivers/thinkphp5/Blade.php"
+                    }
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache2"
+            ],
+            "authors": [
+                {
+                    "name": "luoyy",
+                    "email": "zishang520@gmail.com"
+                }
+            ],
+            "description": "think blade view engine",
+            "homepage": "http://www.luoyy.com",
+            "time": "2017-11-08 07:07:01"
+        },
+        {
+            "name": "topthink/framework",
+            "version": "v5.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/framework.git",
+                "reference": "0fb51680e8d62495d27f17a0e6cf889b763a6d3c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/top-think/framework/0fb51680e8d62495d27f17a0e6cf889b763a6d3c.zip",
+                "reference": "0fb51680e8d62495d27f17a0e6cf889b763a6d3c",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +136,7 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2017-07-05T03:35:06+00:00"
+            "time": "2017-11-06 01:19:03"
         },
         {
             "name": "topthink/think-captcha",
@@ -91,7 +172,7 @@
                 }
             ],
             "description": "captcha package for thinkphp5",
-            "time": "2016-07-06T01:47:11+00:00"
+            "time": "2016-07-06 01:47:11"
         },
         {
             "name": "topthink/think-installer",
@@ -132,7 +213,7 @@
                     "email": "448901948@qq.com"
                 }
             ],
-            "time": "2017-05-27T06:58:09+00:00"
+            "time": "2017-05-27 06:58:09"
         },
         {
             "name": "topthink/think-migration",
@@ -171,20 +252,20 @@
                     "email": "448901948@qq.com"
                 }
             ],
-            "time": "2017-03-31T06:33:23+00:00"
+            "time": "2017-03-31 06:33:23"
         },
         {
             "name": "zoujingli/wechat-php-sdk",
-            "version": "v1.3.10",
+            "version": "v1.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zoujingli/wechat-php-sdk.git",
-                "reference": "38f86a42b1c0058d889a0969190540037629606a"
+                "reference": "c0c55fe440418267ae97cc45809e4064c95744d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/zoujingli/wechat-php-sdk/38f86a42b1c0058d889a0969190540037629606a.zip",
-                "reference": "38f86a42b1c0058d889a0969190540037629606a",
+                "url": "https://files.phpcomposer.com/files/zoujingli/wechat-php-sdk/c0c55fe440418267ae97cc45809e4064c95744d0.zip",
+                "reference": "c0c55fe440418267ae97cc45809e4064c95744d0",
                 "shasum": ""
             },
             "require": {
@@ -205,7 +286,7 @@
             "keywords": [
                 "wechat-php-sdk"
             ],
-            "time": "2017-04-19T13:34:58+00:00"
+            "time": "2017-07-18 12:00:27"
         }
     ],
     "packages-dev": [],

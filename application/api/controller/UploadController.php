@@ -21,7 +21,7 @@ class UploadController extends Controller
                 'message' => '未登录'
             ];
 
-            return json($result);
+            return abort(json($result));
         }
     }
 
@@ -37,7 +37,6 @@ class UploadController extends Controller
         ];
 
         $file = $this->request->file('file');
-
 
 
         $upload_path = str_replace('\\', '/', ROOT_PATH . 'public/uploads');
@@ -62,12 +61,5 @@ class UploadController extends Controller
             }
         }
         return json($result);
-    }
-
-    public function index()
-    {
-        $upload = new UploadImages();
-        $upload->name = 'xxxxxx';
-        die;
     }
 }

@@ -49,7 +49,7 @@ class AdminBaseController extends Controller
             $auth     = new Auth();
             $admin_id = Session::get('admin_id');
             if (!$auth->check($module . '/' . $controller . '/' . $action, $admin_id) && $admin_id != 1) {
-                $this->error('没有权限');
+                return $this->error('没有权限');
             }
         }
     }
@@ -75,5 +75,10 @@ class AdminBaseController extends Controller
         $menu = !empty($menu) ? array2tree($menu) : [];
 
         $this->assign('menu', $menu);
+    }
+
+    public function _empty()
+    {
+        return $this->error('访问的页面不存在');
     }
 }

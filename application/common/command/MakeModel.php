@@ -8,7 +8,6 @@
 
 namespace app\common\command;
 
-
 use think\Config;
 use think\console\Command;
 use think\console\Input;
@@ -20,7 +19,6 @@ use think\View;
 
 class MakeModel extends Command
 {
-
 
     // The following are the supported abstract column data types.
     const TYPE_PK = 'pk';
@@ -43,7 +41,6 @@ class MakeModel extends Command
     const TYPE_BINARY = 'binary';
     const TYPE_BOOLEAN = 'boolean';
     const TYPE_MONEY = 'money';
-
 
     public $typeMap = [
         'tinyint' => self::TYPE_SMALLINT,
@@ -81,15 +78,12 @@ class MakeModel extends Command
      */
     private $db;
 
-
     protected function configure()
     {
         $this->setName('make-model')->setDescription('create a new model class');
-        $this->addOption("table",'t',Option::VALUE_REQUIRED,'create model class table name');
-        $this->addOption("module",'m',Option::VALUE_OPTIONAL,'namespace module','/');
+        $this->addOption("table", 't', Option::VALUE_REQUIRED, 'create model class table name');
+        $this->addOption("module", 'm', Option::VALUE_OPTIONAL, 'namespace module', '/');
     }
-
-
 
     public function execute(Input $input, Output $output)
     {
@@ -98,8 +92,8 @@ class MakeModel extends Command
         $output->writeln('make model class file:');
 
         $className = $input->getOption('table');
-        $tableName = Config::get('database.prefix').$className;
-        $className = Loader::parseName($className,1);
+        $tableName = Config::get('database.prefix') . $className;
+        $className = Loader::parseName($className, 1);
 
         $module = $input->getOption('module');
         $info = $this->getClassInfo($module);
@@ -109,46 +103,44 @@ class MakeModel extends Command
          */
 
         $property = [];
-        foreach ($tableColumns as $column){
+        foreach ($tableColumns as $column) {
             $property[] = " * @property {$column['phpType']} \${$column['name']}";
         }
-        $property = join("\n",$property);
+        $property = join("\n", $property);
 
-        if(file_exists($info['path'].'/'.$className.'.php')){
+        if (file_exists($info['path'] . '/' . $className . '.php')) {
 
             $output->writeln('error: file exists.');
             return false;
         }
-        $this->codeFile($property,$tableName,$className,$info['namespace'],$info['path']);
+        $this->codeFile($property, $tableName, $className, $info['namespace'], $info['path']);
         $output->writeln($className);
     }
 
-
     public function getClassInfo($module)
     {
-        if($module == '/')
-        {
+        if ($module == '/') {
             //检测是否是多模块
             $isM = Config::get('app_multi_module');
-            if(!$isM){
+            if (!$isM) {
                 $module = Config::get('default_module');
             }
         }
-        if(substr($module,0,1) != '/'){
-            $module = '/'.$module;
+        if (substr($module, 0, 1) != '/') {
+            $module = '/' . $module;
         }
         $data = ['path' => '', 'namespace' => ''];
-        if($module == '/'){
-            $data['path'] = ROOT_PATH.'application/model';
-            $data['namespace'] = Config::get('app_namespace').'\model';
-        }else{
-            $data['path'] = ROOT_PATH.'application'.$module.'/model';
-            $data['namespace'] = Config::get('app_namespace').'\\'.substr($module,1).'\model';
+        if ($module == '/') {
+            $data['path'] = ROOT_PATH . 'application/model';
+            $data['namespace'] = Config::get('app_namespace') . '\model';
+        } else {
+            $data['path'] = ROOT_PATH . 'application' . $module . '/model';
+            $data['namespace'] = Config::get('app_namespace') . '\\' . substr($module, 1) . '\model';
         }
         return $data;
     }
 
-    public function codeFile($property,$tableName,$className,$namespace,$path)
+    public function codeFile($property, $tableName, $className, $namespace, $path)
     {
         $php = "<?php";
         $data = <<<html
@@ -170,13 +162,11 @@ class {$className} extends Model
 
 html;
 
-        if(!is_dir($path)){
-            mkdir($path,0777,true);
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
         }
-        file_put_contents($path.'/'.$className.'.php',$data);
+        file_put_contents($path . '/' . $className . '.php', $data);
     }
-
-
 
     protected function getColumnPhpType($type)
     {
@@ -243,7 +233,7 @@ html;
         $column = [];
         $column['name'] = $info['field'];
         $column['allowNull'] = $info['null'] === 'YES';
-        $column['isPrimaryKey'] =  strpos($info['key'], 'PRI') !== false;
+        $column['isPrimaryKey'] = strpos($info['key'], 'PRI') !== false;
         $column['autoIncrement'] = stripos($info['extra'], 'auto_increment') !== false;
         $column['comment'] = $info['comment'];
         $column['dbType'] = $info['type'];

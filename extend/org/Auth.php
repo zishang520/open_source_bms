@@ -10,11 +10,10 @@
 // +----------------------------------------------------------------------
 namespace org;
 
-use think\Db;
 use think\Config;
-use think\Session;
+use think\Db;
 use think\Request;
-use think\Loader;
+use think\Session;
 
 /**
  * 权限认证类
@@ -37,38 +36,38 @@ use think\Loader;
 -- ----------------------------
 DROP TABLE IF EXISTS `think_auth_rule`;
 CREATE TABLE `think_auth_rule` (
-    `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-    `name` char(80) NOT NULL DEFAULT '',
-    `title` char(20) NOT NULL DEFAULT '',
-    `type` tinyint(1) NOT NULL DEFAULT '1',
-    `status` tinyint(1) NOT NULL DEFAULT '1',
-    `condition` char(100) NOT NULL DEFAULT '',  # 规则附件条件,满足附加条件的规则,才认为是有效的规则
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `name` (`name`)
+`id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+`name` char(80) NOT NULL DEFAULT '',
+`title` char(20) NOT NULL DEFAULT '',
+`type` tinyint(1) NOT NULL DEFAULT '1',
+`status` tinyint(1) NOT NULL DEFAULT '1',
+`condition` char(100) NOT NULL DEFAULT '',  # 规则附件条件,满足附加条件的规则,才认为是有效的规则
+PRIMARY KEY (`id`),
+UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 -- ----------------------------
 -- think_auth_group 用户组表，
 -- id：主键， title:用户组中文名称， rules：用户组拥有的规则id， 多个规则","隔开，status 状态：为1正常，为0禁用
 -- ----------------------------
 DROP TABLE IF EXISTS `think_auth_group`;
-    CREATE TABLE `think_auth_group` (
-    `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-    `title` char(100) NOT NULL DEFAULT '',
-    `status` tinyint(1) NOT NULL DEFAULT '1',
-    `rules` char(80) NOT NULL DEFAULT '',
-    PRIMARY KEY (`id`)
+CREATE TABLE `think_auth_group` (
+`id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+`title` char(100) NOT NULL DEFAULT '',
+`status` tinyint(1) NOT NULL DEFAULT '1',
+`rules` char(80) NOT NULL DEFAULT '',
+PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 -- ----------------------------
 -- think_auth_group_access 用户组明细表
 -- uid:用户id，group_id：用户组id
 -- ----------------------------
 DROP TABLE IF EXISTS `think_auth_group_access`;
-    CREATE TABLE `think_auth_group_access` (
-    `uid` mediumint(8) unsigned NOT NULL,
-    `group_id` mediumint(8) unsigned NOT NULL,
-    UNIQUE KEY `uid_group_id` (`uid`,`group_id`),
-    KEY `uid` (`uid`),
-    KEY `group_id` (`group_id`)
+CREATE TABLE `think_auth_group_access` (
+`uid` mediumint(8) unsigned NOT NULL,
+`group_id` mediumint(8) unsigned NOT NULL,
+UNIQUE KEY `uid_group_id` (`uid`,`group_id`),
+KEY `uid` (`uid`),
+KEY `group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
  */
 
@@ -86,12 +85,12 @@ class Auth
 
     //默认配置
     protected $config = [
-        'auth_on'           => 1, // 权限开关
-        'auth_type'         => 1, // 认证方式，1为实时认证；2为登录认证。
-        'auth_group'        => 'auth_group', // 用户组数据表名
+        'auth_on' => 1, // 权限开关
+        'auth_type' => 1, // 认证方式，1为实时认证；2为登录认证。
+        'auth_group' => 'auth_group', // 用户组数据表名
         'auth_group_access' => 'auth_group_access', // 用户-用户组关系表
-        'auth_rule'         => 'auth_rule', // 权限规则表
-        'auth_user'         => 'member', // 用户信息表
+        'auth_rule' => 'auth_rule', // 权限规则表
+        'auth_user' => 'member', // 用户信息表
     ];
 
     /**
@@ -156,7 +155,7 @@ class Auth
             if ('url' == $mode && $query != $auth) {
                 parse_str($query, $param); //解析规则中的param
                 $intersect = array_intersect_assoc($REQUEST, $param);
-                $auth      = preg_replace('/\?.*$/U', '', $auth);
+                $auth = preg_replace('/\?.*$/U', '', $auth);
                 if (in_array($auth, $name) && $intersect == $param) {
                     //如果节点相符且url参数满足
                     $list[] = $auth;
@@ -192,12 +191,12 @@ class Auth
             return $groups[$uid];
         }
         // 转换表名
-//        $auth_group_access = Loader::parseName($this->config['auth_group_access'], 1);
-//        $auth_group        = Loader::parseName($this->config['auth_group'], 1);
+        //        $auth_group_access = Loader::parseName($this->config['auth_group_access'], 1);
+        //        $auth_group        = Loader::parseName($this->config['auth_group'], 1);
         $auth_group_access = $this->config['auth_group_access'];
-        $auth_group        = $this->config['auth_group'];
+        $auth_group = $this->config['auth_group'];
         // 执行查询
-        $user_groups  = Db::view($auth_group_access, 'uid,group_id')
+        $user_groups = Db::view($auth_group_access, 'uid,group_id')
             ->view($auth_group, 'title,rules', "{$auth_group_access}.group_id={$auth_group}.id", 'LEFT')
             ->where("{$auth_group_access}.uid='{$uid}' and {$auth_group}.status='1'")
             ->select();
@@ -215,7 +214,7 @@ class Auth
     protected function getAuthList($uid, $type)
     {
         static $_authList = []; //保存用户验证通过的权限列表
-        $t = implode(',', (array)$type);
+        $t = implode(',', (array) $type);
         if (isset($_authList[$uid . $t])) {
             return $_authList[$uid . $t];
         }
@@ -224,19 +223,19 @@ class Auth
         }
         //读取用户所属用户组
         $groups = $this->getGroups($uid);
-        $ids    = []; //保存用户所属用户组设置的所有权限规则id
+        $ids = []; //保存用户所属用户组设置的所有权限规则id
         foreach ($groups as $g) {
             $ids = array_merge($ids, explode(',', trim($g['rules'], ',')));
         }
-        $ids = array_unique($ids);
+        $ids = array_filter(array_unique($ids));
         if (empty($ids)) {
             $_authList[$uid . $t] = [];
 
             return [];
         }
         $map = [
-            'id'   => ['in', $ids],
-            'type' => $type
+            'id' => ['in', $ids],
+            'type' => $type,
         ];
         //读取用户组所有权限规则
         $rules = Db::name($this->config['auth_rule'])->where($map)->field('condition,name')->select();
@@ -245,7 +244,7 @@ class Auth
         foreach ($rules as $rule) {
             if (!empty($rule['condition'])) {
                 //根据condition进行验证
-                $user    = $this->getUserInfo($uid); //获取用户信息,一维数组
+                $user = $this->getUserInfo($uid); //获取用户信息,一维数组
                 $command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $rule['condition']);
                 @(eval('$condition=(' . $command . ');'));
                 if ($condition) {
