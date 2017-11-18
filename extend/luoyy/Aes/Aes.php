@@ -31,7 +31,7 @@ class Aes
     public function __construct()
     {
         self::$ENCRYPTKEY = md5(Env::get('APP_KEY', self::$ENCRYPTKEY));
-        self::$IV = md5(self::$ENCRYPTKEY + self::$IV);
+        self::$IV = md5(self::$ENCRYPTKEY . self::$IV);
     }
 
     /**
