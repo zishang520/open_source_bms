@@ -15,7 +15,7 @@
                         <div class="layui-input-block">
                             <select name="cid" lay-verify="required">
                                 @foreach($category_level_list as $vo)
-                                <option value="{{ $vo['id'] }}">{neq name="vo.level" value="1"}|{php}for($i=1;$i<$vo['level'];$i++){echo ' ----';}{/php}{/neq} {{ $vo['name'] }}</option>
+                                <option value="{{ $vo['id'] }}">{{ $vo['level'] != 1 ? '|' . str_repeat(' ----', $vo['level'] - 1) : '' }} {{ $vo['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>

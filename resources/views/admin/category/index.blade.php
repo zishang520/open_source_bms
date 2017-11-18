@@ -23,7 +23,7 @@
                     <tr>
                         <td>{{ $vo['id'] }}</td>
                         <td>{{ $vo['sort'] }}</td>
-                        <td>{neq name="vo.level" value="1"}|{php}for($i=1;$i<$vo['level'];$i++){echo ' ----';}{/php}{/neq} {{ $vo['name'] }}</td>
+                        <td>{{ $vo['level'] != 1 ? '|' . str_repeat(' ----', $vo['level'] - 1) : '' }} {{ $vo['name'] }}</td>
                         <td>
                             <a href="{{ url('admin/category/add',['pid'=>$vo['id']]) }}" class="layui-btn layui-btn-mini">添加子栏目</a>
                             <a href="{{ url('admin/category/edit',['id'=>$vo['id']]) }}" class="layui-btn layui-btn-normal layui-btn-mini">编辑</a>

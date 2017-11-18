@@ -10,13 +10,13 @@
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <form class="layui-form form-container" action="{{ url('admin/article/update') }}" method="post">
+                <form class="layui-form form-container" action="{{ url('admin/article/update', ['id' => $article['id']]) }}" method="post">
                     <div class="layui-form-item">
                         <label class="layui-form-label">所属栏目</label>
                         <div class="layui-input-block">
                             <select name="cid" lay-verify="required">
                                 @foreach($category_level_list as $vo)
-                                <option value="{{ $vo['id'] }}" @if($article['cid']==$vo['id']) selected="selected"@endif>{neq name="vo.level" value="1"}|{php}for($i=1;$i<$vo['level'];$i++){echo ' ----';}{/php}{/neq} {{ $vo['name'] }}</option>
+                                <option value="{{ $vo['id'] }}" @if($article['cid']==$vo['id']) selected="selected"@endif>{{ $vo['level'] != 1 ? '|' . str_repeat(' ----', $vo['level'] - 1) : '' }} {{ $vo['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>

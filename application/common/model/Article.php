@@ -1,6 +1,7 @@
 <?php
 namespace app\common\model;
 
+use app\common\model\ArticleCategory;
 use think\Model;
 use think\Session;
 
@@ -55,5 +56,17 @@ class Article extends Model
     protected function setCreateTimeAttr()
     {
         return date('Y-m-d H:i:s');
+    }
+
+    /**
+     * [category 一对一内分类关联]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2017-11-18T19:02:16+0800
+     * @copyright (c)                      ZiShang520    All Rights Reserved
+     * @return    [type]                   [description]
+     */
+    public function category()
+    {
+        return $this->hasOne(ArticleCategory::class, 'id', 'cid');
     }
 }
