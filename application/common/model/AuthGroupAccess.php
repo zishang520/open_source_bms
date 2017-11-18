@@ -2,7 +2,7 @@
 
 namespace app\common\model;
 
-use think\Model;
+use think\model\Pivot;
 
 /**
  * This is the model class for table "os_auth_group_access".
@@ -10,7 +10,7 @@ use think\Model;
  * @property string $uid
  * @property string $group_id
  */
-class AuthGroupAccess extends Model
+class AuthGroupAccess extends Pivot
 {
 
 }

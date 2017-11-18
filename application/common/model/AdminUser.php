@@ -2,6 +2,7 @@
 
 namespace app\common\model;
 
+use app\common\model\AuthGroup;
 use app\common\model\AuthGroupAccess;
 use org\PasswordHash;
 use think\Config;
@@ -59,5 +60,96 @@ class AdminUser extends Model
     public function getGroupIdAttr()
     {
         return $this->authGroupAccess->group_id;
+    }
+
+
+    /**
+     * [roles 权限组]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2017-11-09T16:21:21+0800
+     * @copyright (c)                      ZiShang520    All Rights Reserved
+     * @return    [type]                   [description]
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(AuthGroup::class, AuthGroupAccess::class, 'group_id', 'uid');
+    }
+/**
+     * Save the inputted permissions.
+     *
+     * @param mixed $inputPermissions
+     *
+     * @return void
+     */
+    public function saveRole($inputRole)
+    {
+        if (!empty($inputRole)) {
+            $this->roles()->sync($inputRole);
+        } else {
+            $this->roles()->detach();
+        }
+    }
+    /**
+     * Alias to eloquent many-to-many relation's attach() method.
+     *
+     * @param mixed $role
+     */
+    public function attachRole($role)
+    {
+        if (is_object($role)) {
+            $role = $role->id;
+        }
+
+        if (is_array($role)) {
+            $role = $role['id'];
+        }
+
+        $this->roles()->attach($role);
+    }
+
+    /**
+     * Alias to eloquent many-to-many relation's detach() method.
+     *
+     * @param mixed $role
+     */
+    public function detachRole($role)
+    {
+        if (is_object($role)) {
+            $role = $role->id;
+        }
+
+        if (is_array($role)) {
+            $role = $role['id'];
+        }
+
+        $this->roles()->detach($role);
+    }
+
+    /**
+     * Attach multiple roles to a user
+     *
+     * @param mixed $roles
+     */
+    public function attachRoles($roles)
+    {
+        foreach ($roles as $role) {
+            $this->attachRole($role);
+        }
+    }
+
+    /**
+     * Detach multiple roles from a user
+     *
+     * @param mixed $roles
+     */
+    public function detachRoles($roles = null)
+    {
+        if (!$roles) {
+            $roles = $this->roles()->select();
+        }
+
+        foreach ($roles as $role) {
+            $this->detachRole($role);
+        }
     }
 }
