@@ -10,5 +10,5 @@
 // +----------------------------------------------------------------------
 
 return [
-    'app\common\command\MakeModel'
+    app\common\command\MakeModel::class,
 ];

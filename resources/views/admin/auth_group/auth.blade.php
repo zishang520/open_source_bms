@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('css')
 <link rel="stylesheet" href="__CSS__/ztree-metro-style.css">
 @endsection

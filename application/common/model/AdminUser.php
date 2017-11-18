@@ -43,7 +43,7 @@ class AdminUser extends Model
      */
     public function verifyPassword($password)
     {
-        return (new PasswordHash(8, false))->CheckPassword($val . Config::get('salt'), $this->getAttr('password'));
+        return (new PasswordHash(8, false))->CheckPassword($password . Config::get('salt'), $this->getAttr('password'));
     }
     /**
      * [authGroupAccess 一对一关联]

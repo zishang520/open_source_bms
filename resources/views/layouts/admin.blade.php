@@ -7,7 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="stylesheet" href="__JS__/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="__CSS__/font-awesome.min.css">
-    <!--CSS引用-->@section('css')@endsection
+    <!--CSS引用-->
+    @yield('css')
     <link rel="stylesheet" href="__CSS__/admin.css">
     <!--[if lt IE 9]>
     <script src="__CSS__/html5shiv.min.js"></script>
@@ -56,14 +57,12 @@
                 </li>
                 @endif
                 @endforeach
-
-                <li class="layui-nav-item" style="height: 30px; text-align: center"></li>
             </ul>
         </div>
     </div>
 
-    <!--主体-->@section('body')@endsection
-
+    <!--主体-->
+    @yield('body')
     <!--底部-->
     <div class="layui-footer footer">
         <div class="layui-main">
@@ -82,7 +81,9 @@
 <!--JS引用-->
 <script src="__JS__/jquery.min.js"></script>
 <script src="__JS__/layui/lay/dest/layui.all.js"></script>
-<script src="__JS__/admin.js"></script>@section('js')@endsection
-<!--页面JS脚本-->@section('script')@endsection
+<script src="__JS__/admin.js"></script>
+@yield('js')
+<!--页面JS脚本-->
+@yield('script')
 </body>
 </html>

@@ -1,4 +1,5 @@
-@extends('base')
+@extends('layouts/admin')
+
 @section('body')
 <div class="layui-body">
     <!--tab标签-->

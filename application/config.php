@@ -156,7 +156,7 @@ return [
         // 视图基础目录（集中式）
         'view_base' => ROOT_PATH . 'resources' . DS . 'views' . DS,
         // 模板起始路径
-        'view_path' => '',
+        'view_path' => ROOT_PATH . 'resources' . DS . 'views' . DS,
         // 模板文件名分隔符
         'view_depr' => DS,
         // 模板缓存目录
