@@ -41,15 +41,15 @@ class ChangePasswordController extends AdminBaseController
                     $user->password = $data['password'];
                     $res          = $user->save();
                     if ($res !== false) {
-                        $this->success('修改成功');
+                        return $this->success('修改成功');
                     } else {
-                        $this->error('修改失败');
+                        return $this->error('修改失败');
                     }
                 } else {
-                    $this->error('两次密码输入不一致');
+                    return $this->error('两次密码输入不一致');
                 }
             } else {
-                $this->error('原密码不正确');
+                return $this->error('原密码不正确');
             }
         }
     }

@@ -39,11 +39,11 @@ class ConfigController extends AdminBaseController
             $data = $this->request->post();
             $result = $this->validate($data,'WechatConfig');
             if(true !== $result){
-                $this->error($result);
+                return $this->error($result);
             }
             $config->value = $data;
             if($config->save()){
-                $this->success('保存成功');
+                return $this->success('保存成功');
             }
 
         }

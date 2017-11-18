@@ -72,12 +72,12 @@ class ArticleController extends AdminBaseController
             $validate_result = $this->validate($data, 'Article');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
                 if ($this->articleModel->allowField(true)->save($data)) {
-                    $this->success('保存成功');
+                    return $this->success('保存成功');
                 } else {
-                    $this->error('保存失败');
+                    return $this->error('保存失败');
                 }
             }
         }
@@ -106,12 +106,12 @@ class ArticleController extends AdminBaseController
             $validate_result = $this->validate($data, 'Article');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
                 if ($this->articleModel->allowField(true)->save($data, $id) !== false) {
-                    $this->success('更新成功');
+                    return $this->success('更新成功');
                 } else {
-                    $this->error('更新失败');
+                    return $this->error('更新失败');
                 }
             }
         }
@@ -127,12 +127,12 @@ class ArticleController extends AdminBaseController
         $id = $ids ? $ids : $id;
         if ($id) {
             if ($this->articleModel->destroy($id)) {
-                $this->success('删除成功');
+                return $this->success('删除成功');
             } else {
-                $this->error('删除失败');
+                return $this->error('删除失败');
             }
         } else {
-            $this->error('请选择需要删除的文章');
+            return $this->error('请选择需要删除的文章');
         }
     }
 
@@ -151,12 +151,12 @@ class ArticleController extends AdminBaseController
                 $data[] = ['id' => $value, 'status' => $status];
             }
             if ($this->articleModel->saveAll($data)) {
-                $this->success('操作成功');
+                return $this->success('操作成功');
             } else {
-                $this->error('操作失败');
+                return $this->error('操作失败');
             }
         } else {
-            $this->error('请选择需要操作的文章');
+            return $this->error('请选择需要操作的文章');
         }
     }
 }

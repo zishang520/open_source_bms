@@ -48,16 +48,16 @@ class AdminUserController extends AdminBaseController
             $validate_result = $this->validate($data, 'AdminUser');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
                 $data['password'] = $adminUserModel->encrypt($data['password']);
                 if ( $adminUserModel->allowField(true)->save($data)) {
                     $auth_group_access['uid']      = $adminUserModel->id;
                     $auth_group_access['group_id'] = $group_id;
                     $authGroupAccessModel->save($auth_group_access);
-                    $this->success('保存成功');
+                    return $this->success('保存成功');
                 } else {
-                    $this->error('保存失败');
+                    return $this->error('保存失败');
                 }
             }
         }
@@ -89,7 +89,7 @@ class AdminUserController extends AdminBaseController
             $validate_result = $this->validate($data, 'AdminUser');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
                 $admin_user = $adminUserModel->find($id);
                 $admin_user->username = $data['username'];
@@ -101,9 +101,9 @@ class AdminUserController extends AdminBaseController
                     $auth_group_access['group_id'] = $group_id;
                     $admin_user->authGroupAccess->group_id = $group_id;
                     $admin_user->authGroupAccess->save();
-                    $this->success('更新成功');
+                    return $this->success('更新成功');
                 } else {
-                    $this->error('更新失败');
+                    return $this->error('更新失败');
                 }
             }
         }
@@ -116,13 +116,13 @@ class AdminUserController extends AdminBaseController
     public function delete($id)
     {
         if ($id == 1) {
-            $this->error('默认管理员不可删除');
+            return $this->error('默认管理员不可删除');
         }
         if ($this->adminUserModel->destroy($id)) {
             $this->authGroupAccessModel->where('uid', $id)->delete();
-            $this->success('删除成功');
+            return $this->success('删除成功');
         } else {
-            $this->error('删除失败');
+            return $this->error('删除失败');
         }
     }
 }

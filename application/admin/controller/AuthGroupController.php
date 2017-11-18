@@ -51,9 +51,9 @@ class AuthGroupController extends AdminBaseController
             $data = $this->request->post();
 
             if ($this->authGroupModel->save($data) !== false) {
-                $this->success('保存成功');
+                return $this->success('保存成功');
             } else {
-                $this->error('保存失败');
+                return $this->error('保存失败');
             }
         }
     }
@@ -80,12 +80,12 @@ class AuthGroupController extends AdminBaseController
             $data = $this->request->post();
 
             if ($id == 1 && $data['status'] != 1) {
-                $this->error('超级管理组不可禁用');
+                return $this->error('超级管理组不可禁用');
             }
             if ($this->authGroupModel->save($data, $id) !== false) {
-                $this->success('更新成功');
+                return $this->success('更新成功');
             } else {
-                $this->error('更新失败');
+                return $this->error('更新失败');
             }
         }
     }
@@ -97,12 +97,12 @@ class AuthGroupController extends AdminBaseController
     public function delete($id)
     {
         if ($id == 1) {
-            $this->error('超级管理组不可删除');
+            return $this->error('超级管理组不可删除');
         }
         if ($this->authGroupModel->destroy($id)) {
-            $this->success('删除成功');
+            return $this->success('删除成功');
         } else {
-            $this->error('删除失败');
+            return $this->error('删除失败');
         }
     }
 
@@ -147,9 +147,9 @@ class AuthGroupController extends AdminBaseController
                 $group_data['rules'] = is_array($auth_rule_ids) ? implode(',', $auth_rule_ids) : '';
 
                 if ($this->authGroupModel->save($group_data, $id) !== false) {
-                    $this->success('授权成功');
+                    return $this->success('授权成功');
                 } else {
-                    $this->error('授权失败');
+                    return $this->error('授权失败');
                 }
             }
         }

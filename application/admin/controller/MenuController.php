@@ -54,12 +54,12 @@ class MenuController extends AdminBaseController
             $validate_result = $this->validate($data, 'Menu');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
                 if ($this->authRuleModel->save($data)) {
-                    $this->success('保存成功');
+                    return $this->success('保存成功');
                 } else {
-                    $this->error('保存失败');
+                    return $this->error('保存失败');
                 }
             }
         }
@@ -88,12 +88,12 @@ class MenuController extends AdminBaseController
             $validate_result = $this->validate($data, 'Menu');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
                 if ($this->authRuleModel->save($data, $id) !== false) {
-                    $this->success('更新成功');
+                    return $this->success('更新成功');
                 } else {
-                    $this->error('更新失败');
+                    return $this->error('更新失败');
                 }
             }
         }
@@ -107,12 +107,12 @@ class MenuController extends AdminBaseController
     {
         $sub_menu = $this->authRuleModel->where(['pid' => $id])->find();
         if (!empty($sub_menu)) {
-            $this->error('此菜单下存在子菜单，不可删除');
+            return $this->error('此菜单下存在子菜单，不可删除');
         }
         if ($this->authRuleModel->destroy($id)) {
-            $this->success('删除成功');
+            return $this->success('删除成功');
         } else {
-            $this->error('删除失败');
+            return $this->error('删除失败');
         }
     }
 }

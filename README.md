@@ -13,6 +13,11 @@
 * 默认后台账号 `admin`，密码`admin`
 
 ## 2017.8.9合并更新
+*
+*
+*
+
+## 2017.8.9合并更新
 
 * 感谢 [wuangjs](https://github.com/wuangjs) 的支持
 * 合并详情 [查看](https://github.com/xiayulei/open_source_bms/pull/25)

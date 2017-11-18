@@ -56,12 +56,12 @@ class CategoryController extends AdminBaseController
             $validate_result = $this->validate($data, 'Category');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
                 if ($this->categoryModel->allowField(true)->save($data)) {
-                    $this->success('保存成功');
+                    return $this->success('保存成功');
                 } else {
-                    $this->error('保存失败');
+                    return $this->error('保存失败');
                 }
             }
         }
@@ -90,16 +90,16 @@ class CategoryController extends AdminBaseController
             $validate_result = $this->validate($data, 'Category');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
                 $children = $this->categoryModel->where(['path' => ['like', "%,{$id},%"]])->column('id');
                 if (in_array($data['pid'], $children)) {
-                    $this->error('不能移动到自己的子分类');
+                    return $this->error('不能移动到自己的子分类');
                 } else {
                     if ($this->categoryModel->allowField(true)->save($data, $id) !== false) {
-                        $this->success('更新成功');
+                        return $this->success('更新成功');
                     } else {
-                        $this->error('更新失败');
+                        return $this->error('更新失败');
                     }
                 }
             }
@@ -116,15 +116,15 @@ class CategoryController extends AdminBaseController
         $article  = $this->articleModel->where(['cid' => $id])->find();
 
         if (!empty($category)) {
-            $this->error('此分类下存在子分类，不可删除');
+            return $this->error('此分类下存在子分类，不可删除');
         }
         if (!empty($article)) {
-            $this->error('此分类下存在文章，不可删除');
+            return $this->error('此分类下存在文章，不可删除');
         }
         if ($this->categoryModel->destroy($id)) {
-            $this->success('删除成功');
+            return $this->success('删除成功');
         } else {
-            $this->error('删除失败');
+            return $this->error('删除失败');
         }
     }
 }

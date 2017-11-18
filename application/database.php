@@ -9,48 +9,48 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-use think\Env;
 use think\Collection;
+use think\Env;
 
 return [
     // 数据库类型
-    'type'            => Env::get('database.type','mysql'),
+    'type' => Env::get('DB_CONNECTION', 'mysql'),
     // 服务器地址
-    'hostname'        => Env::get('database.host','127.0.0.1'),
+    'hostname' => Env::get('DB_HOST', 'localhost'),
     // 数据库名
-    'database'        => 'open_source_bms',
+    'database' => Env::get('DB_DATABASE', ''),
     // 用户名
-    'username'        => Env::get('database.username','root'),
+    'username' => Env::get('DB_USERNAME', 'root'),
     // 密码
-    'password'        => Env::get('database.password','root'),
+    'password' => Env::get('DB_PASSWORD', ''),
     // 端口
-    'hostport'        => '',
+    'hostport' => Env::get('DB_PORT', 3306),
     // 连接dsn
-    'dsn'             => '',
+    'dsn' => '',
     // 数据库连接参数
-    'params'          => [],
+    'params' => [],
     // 数据库编码默认采用utf8
-    'charset'         => 'utf8mb4',
+    'charset' => 'utf8mb4',
     // 数据库表前缀
-    'prefix'          => '',
+    'prefix' => Env::get('DB_PREFIX', 'os_'),
     // 数据库调试模式
-    'debug'           => true,
+    'debug' => true,
     // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)
-    'deploy'          => 0,
+    'deploy' => 0,
     // 数据库读写是否分离 主从式有效
-    'rw_separate'     => false,
+    'rw_separate' => false,
     // 读写分离后 主服务器数量
-    'master_num'      => 1,
+    'master_num' => 1,
     // 指定从服务器序号
-    'slave_no'        => '',
+    'slave_no' => '',
     // 是否严格检查字段是否存在
-    'fields_strict'   => true,
+    'fields_strict' => true,
     // 数据集返回类型 array 数组 collection Collection对象
-    'resultset_type'  => Collection::class,
+    'resultset_type' => Collection::class,
     // 是否自动写入时间戳字段
-    'auto_timestamp'  => false,
+    'auto_timestamp' => false,
     // 时间字段取出后的默认时间格式
     'datetime_format' => false,
     // 是否需要进行SQL性能分析
-    'sql_explain'     => false,
+    'sql_explain' => false,
 ];
