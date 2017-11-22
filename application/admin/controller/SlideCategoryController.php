@@ -11,12 +11,6 @@ use think\Db;
  */
 class SlideCategoryController extends AdminBaseController
 {
-    protected function _initialize()
-    {
-        parent::_initialize();
-
-    }
-
     /**
      * 轮播图分类
      * @return mixed

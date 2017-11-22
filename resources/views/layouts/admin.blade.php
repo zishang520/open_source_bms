@@ -2,10 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Open Source BMS</title>
+    <title>后台管理系统</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="stylesheet" href="__JS__/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="__JS__/layui/css/layui.ext.css" media="all">
     <link rel="stylesheet" href="__CSS__/font-awesome.min.css">
     <!--CSS引用-->
     @yield('css')
@@ -19,8 +20,12 @@
 <div class="layui-layout layui-layout-admin">
     <!--头部-->
     <div class="layui-header header">
-        <a href=""><img class="logo" src="__STATIC__/images/admin_logo.png" alt=""></a>
-        <ul class="layui-nav" style="position: absolute;top: 0;right: 20px;background: none;">
+        <a href="{{ url('/admin') }}" class="admin-logo"><img class="logo" src="__STATIC__/images/admin_logo.png" alt=""></a>
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="javascript:void(0);" class="admin-side-toggle" title="收起" target="_blank"><i class="fa fa-bars" aria-hidden="true"></i></a></li>
+            <li class="layui-nav-item"><a href="javascript:void(0);" id="trigger-fullscreen" title="全屏" target="_blank"><i class="fa fa-arrows-alt" aria-hidden="true"></i></a></li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item"><a href="{{ url('/') }}" target="_blank">前台首页</a></li>
             <li class="layui-nav-item"><a href="" data-url="{{ url('admin/system/clear') }}" id="clear-cache">清除缓存</a></li>
             <li class="layui-nav-item">

@@ -13,14 +13,6 @@ use think\Request;
  */
 class ArticleController extends AdminBaseController
 {
-
-    protected function _initialize()
-    {
-        parent::_initialize();
-
-        $this->assign('category_level_list', ArticleCategory::getLevelList());
-    }
-
     /**
      * 文章管理
      * @return mixed
@@ -50,6 +42,7 @@ class ArticleController extends AdminBaseController
         return view('article/index')
             ->assign('article_list', $article_list)
             ->assign('category_list', ArticleCategory::column('name', 'id'))
+            ->assign('category_level_list', ArticleCategory::getLevelList())
             ->assign('search', $params);
     }
 
@@ -59,7 +52,8 @@ class ArticleController extends AdminBaseController
      */
     public function add()
     {
-        return view('article/add');
+        return view('article/add')
+            ->assign('category_level_list', ArticleCategory::getLevelList());
     }
 
     /**
@@ -94,7 +88,9 @@ class ArticleController extends AdminBaseController
         if (empty($article)) {
             return $this->error('文章数据不存在');
         }
-        return view('article/edit')->assign('article', $article);
+        return view('article/edit')
+            ->assign('category_level_list', ArticleCategory::getLevelList())
+            ->assign('article', $article);
     }
 
     /**
@@ -145,16 +141,16 @@ class ArticleController extends AdminBaseController
      * @param array  $ids
      * @param string $type 操作类型
      */
-    public function toggle($ids = [], $type = '')
+    public function toggle(Request $request, $type = '')
     {
         $data = [];
         $status = $type == 'audit' ? 1 : 0;
-
+        $ids = $request->post('ids/a');
         if (!empty($ids)) {
             foreach ($ids as $value) {
                 $data[] = ['id' => $value, 'status' => $status];
             }
-            if (Article::saveAll($data)) {
+            if ((new Article)->saveAll($data)) {
                 return $this->success('操作成功');
             } else {
                 return $this->error('操作失败');

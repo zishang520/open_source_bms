@@ -13,12 +13,6 @@ use think\Db;
  */
 class SlideController extends AdminBaseController
 {
-
-    protected function _initialize()
-    {
-        parent::_initialize();
-    }
-
     /**
      * 轮播图管理
      * @return mixed

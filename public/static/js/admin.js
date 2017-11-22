@@ -201,6 +201,7 @@ $('#clear-cache').on('click', function() {
 
     return false;
 });
+
 /**
  * [selectCity 无限极下拉]
  * @Author    ZiShang520@gmail.com
@@ -310,7 +311,7 @@ var selectCity = function(param) {
 };
 (function() {
     var status = 3;
-    var sideWidth = $('#admin-side');
+    var sideWidth = $('.layui-side');
     var width = sideWidth.width();
     $('.admin-side-toggle').on('click', function() {
         if (status == 3 && width > 0) {
@@ -319,7 +320,7 @@ var selectCity = function(param) {
             }, function() {
                 status -= 1;
             }); //admin-footer
-            $('#admin-footer').animate({
+            $('.layui-footer').animate({
                 left: '0'
             }, function() {
                 status -= 1;
@@ -338,7 +339,7 @@ var selectCity = function(param) {
             }, function() {
                 status += 1;
             });
-            $('#admin-footer').animate({
+            $('.layui-footer').animate({
                 left: width + 'px'
             }, function() {
                 status += 1;

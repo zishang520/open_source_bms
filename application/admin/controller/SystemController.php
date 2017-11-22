@@ -12,11 +12,6 @@ use think\Db;
  */
 class SystemController extends AdminBaseController
 {
-    public function _initialize()
-    {
-        parent::_initialize();
-    }
-
     /**
      * 站点配置
      */

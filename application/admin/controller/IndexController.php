@@ -11,11 +11,6 @@ use think\Db;
  */
 class IndexController extends AdminBaseController
 {
-    protected function _initialize()
-    {
-        parent::_initialize();
-    }
-
     /**
      * 首页
      * @return mixed
