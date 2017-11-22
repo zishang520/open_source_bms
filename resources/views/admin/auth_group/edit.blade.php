@@ -12,9 +12,21 @@
             <div class="layui-tab-item layui-show">
                 <form class="layui-form form-container" action="{{ url('admin/auth_group/update') }}" method="post">
                     <div class="layui-form-item">
+                        <label class="layui-form-label">权限标识</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" value="{{ $auth_group['name'] }}" required  lay-verify="required" placeholder="用于验证的权限标识" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">名称</label>
                         <div class="layui-input-block">
                             <input type="text" name="title" value="{{ $auth_group['title'] }}" required lay-verify="required" placeholder="请输入权限组名称" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">描述信息</label>
+                        <div class="layui-input-block">
+                            <textarea name="description" placeholder="权限描述信息" class="layui-textarea">{{ $auth_group['description'] }}</textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">

@@ -38,7 +38,7 @@
                     @endforeach
                     </tbody>
                 </table>
-                {{ $admin_user_list->render() }}
+                {!! $admin_user_list->render() !!}
             </div>
         </div>
     </div>

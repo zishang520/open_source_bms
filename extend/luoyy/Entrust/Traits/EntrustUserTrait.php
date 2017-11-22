@@ -27,7 +27,7 @@ trait EntrustUserTrait
         $cacheKey = 'entrust_roles_for_user_' . $this->$userPrimaryKey;
         return Cache::tag(Config::get('entrust.role_user_table'))->remember($cacheKey, function () {
             return $this->roles()->select();
-        }, Config::get('cache.expire', 60));
+        }, Config::get('cache.ttl', 60));
     }
 
     /**
@@ -229,10 +229,16 @@ trait EntrustUserTrait
     }
     public function saveRole($inputRole)
     {
-        if (!empty($inputRole)) {
-            $this->roles()->sync($inputRole);
-        } else {
-            $this->roles()->detach();
+        try {
+            if (!empty($inputRole)) {
+                $this->roles()->sync($inputRole);
+            } else {
+                $this->roles()->detach();
+            }
+            Cache::tag(Config::get('entrust.role_user_table'))->clear();
+        } catch (\Exception $e) {
+            throw $e;
+            return false;
         }
     }
     /**

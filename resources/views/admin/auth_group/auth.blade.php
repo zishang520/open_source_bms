@@ -59,7 +59,7 @@
         };
 
         $.ajax({
-            url: "{{ url('admin/auth_group/getJson') }}",
+            url: "{{ url('admin/auth_group/get_json') }}",
             type: "post",
             dataType: "json",
             cache: false,
@@ -81,7 +81,7 @@
                 auth_rule_ids.push(item.id);
             });
             $.ajax({
-                url: "{{ url('admin/auth_group/updateAuthGroupRule') }}",
+                url: "{{ url('admin/auth_group/update_auth_group_rule') }}",
                 type: "post",
                 cache: false,
                 data: {

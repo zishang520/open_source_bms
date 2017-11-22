@@ -1,9 +1,10 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\model\AuthGroup as AuthGroupModel;
-use app\common\model\AuthRule as AuthRuleModel;
 use app\common\controller\AdminBaseController;
+use app\common\model\AuthGroup;
+use app\common\model\AuthRule;
+use think\Request;
 
 /**
  * 权限组
@@ -12,25 +13,14 @@ use app\common\controller\AdminBaseController;
  */
 class AuthGroupController extends AdminBaseController
 {
-    protected $authGroupModel;
-    protected $authRuleModel;
-
-    protected function _initialize()
-    {
-        parent::_initialize();
-        $this->authGroupModel = new AuthGroupModel();
-        $this->authRuleModel  = new AuthRuleModel();
-    }
-
     /**
      * 权限组
      * @return mixed
      */
     public function index()
     {
-        $auth_group_list = $this->authGroupModel->select();
-
-        return $this->fetch('index', ['auth_group_list' => $auth_group_list]);
+        return view('auth_group/index')
+            ->assign('auth_group_list', AuthGroup::paginate(15, false));
     }
 
     /**
@@ -39,21 +29,27 @@ class AuthGroupController extends AdminBaseController
      */
     public function add()
     {
-        return $this->fetch();
+
+        return view('auth_group/add');
     }
 
     /**
      * 保存权限组
      */
-    public function save()
+    public function save(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data = $this->request->post();
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'AuthGroupSave');
 
-            if ($this->authGroupModel->save($data) !== false) {
-                return $this->success('保存成功');
+            if ($validate_result !== true) {
+                return $this->error($validate_result);
             } else {
-                return $this->error('保存失败');
+                if ((new AuthGroup)->allowField(true)->isUpdate(false)->save($data) !== false) {
+                    return $this->success('保存成功');
+                } else {
+                    return $this->error('保存失败');
+                }
             }
         }
     }
@@ -65,27 +61,30 @@ class AuthGroupController extends AdminBaseController
      */
     public function edit($id)
     {
-        $auth_group = $this->authGroupModel->find($id);
-
-        return $this->fetch('edit', ['auth_group' => $auth_group]);
+        return view('auth_group/edit')->assign('auth_group', AuthGroup::where(['id' => $id])->find());
     }
 
     /**
      * 更新权限组
      * @param $id
      */
-    public function update($id)
+    public function update(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data = $this->request->post();
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'AuthGroupUpdate');
 
-            if ($id == 1 && $data['status'] != 1) {
-                return $this->error('超级管理组不可禁用');
-            }
-            if ($this->authGroupModel->save($data, $id) !== false) {
-                return $this->success('更新成功');
+            if ($validate_result !== true) {
+                return $this->error($validate_result);
             } else {
-                return $this->error('更新失败');
+                if ($data['id'] == 1 && $data['status'] != 1) {
+                    return $this->error('超级管理组不可禁用');
+                }
+                if ((new AuthGroup)->allowField(true)->isUpdate(true)->save($data, ['id' => $data['id']]) !== false) {
+                    return $this->success('更新成功');
+                } else {
+                    return $this->error('更新失败');
+                }
             }
         }
     }
@@ -99,7 +98,7 @@ class AuthGroupController extends AdminBaseController
         if ($id == 1) {
             return $this->error('超级管理组不可删除');
         }
-        if ($this->authGroupModel->destroy($id)) {
+        if (AuthGroup::destroy($id)) {
             return $this->success('删除成功');
         } else {
             return $this->error('删除失败');
@@ -113,7 +112,7 @@ class AuthGroupController extends AdminBaseController
      */
     public function auth($id)
     {
-        return $this->fetch('auth', ['id' => $id]);
+        return view('auth_group/auth')->assign('id', $id);
     }
 
     /**
@@ -121,17 +120,16 @@ class AuthGroupController extends AdminBaseController
      * @param $id
      * @return mixed
      */
-    public function getJson($id)
+    public function get_json($id)
     {
-        $auth_group_data = $this->authGroupModel->find($id)->toArray();
-        $auth_rules      = explode(',', $auth_group_data['rules']);
-        $auth_rule_list  = $this->authRuleModel->field('id,pid,title')->select();
+        $auth_group_data = AuthGroup::where(['id' => $id])->find();
+        $auth_rule_list = AuthRule::field('id,pid,title,name')->select()->toArray();
 
         foreach ($auth_rule_list as $key => $value) {
-            in_array($value['id'], $auth_rules) && $auth_rule_list[$key]['checked'] = true;
+            $auth_group_data->hasPermission($value['name']) && $auth_rule_list[$key]['checked'] = true;
         }
 
-        return $auth_rule_list;
+        return json($auth_rule_list);
     }
 
     /**
@@ -139,14 +137,19 @@ class AuthGroupController extends AdminBaseController
      * @param $id
      * @param $auth_rule_ids
      */
-    public function updateAuthGroupRule($id, $auth_rule_ids = '')
+    public function update_auth_group_rule(Request $request)
     {
-        if ($this->request->isPost()) {
-            if ($id) {
-                $group_data['id']    = $id;
-                $group_data['rules'] = is_array($auth_rule_ids) ? implode(',', $auth_rule_ids) : '';
-
-                if ($this->authGroupModel->save($group_data, $id) !== false) {
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'UpdateAuthGroupRule');
+            if ($validate_result !== true) {
+                return $this->error($validate_result);
+            } else {
+                $auth_group = AuthGroup::where(['id' => $data['id']])->find();
+                if (empty($auth_group)) {
+                    return $this->error('角色获取失败');
+                }
+                if ($auth_group->savePermissions($data['auth_rule_ids'])) {
                     return $this->success('授权成功');
                 } else {
                     return $this->error('授权失败');

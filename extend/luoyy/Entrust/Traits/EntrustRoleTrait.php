@@ -22,7 +22,7 @@ trait EntrustRoleTrait
         $cacheKey = 'entrust_permissions_for_role_' . $this->$rolePrimaryKey;
         return Cache::tag(Config::get('entrust.permission_role_table'))->remember($cacheKey, function () {
             return $this->perms()->select();
-        }, Config::get('cache.expire', 60));
+        }, Config::get('cache.ttl', 60));
     }
 
     /**
@@ -127,12 +127,18 @@ trait EntrustRoleTrait
      */
     public function savePermissions($inputPermissions)
     {
-        if (!empty($inputPermissions)) {
-            $this->perms()->sync($inputPermissions);
-        } else {
-            $this->perms()->detach();
+        try {
+            if (!empty($inputPermissions)) {
+                $this->perms()->sync($inputPermissions);
+            } else {
+                $this->perms()->detach();
+            }
+            Cache::tag(Config::get('entrust.permission_role_table'))->clear();
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
+            return false;
         }
-        Cache::tag(Config::get('entrust.permission_role_table'))->clear();
     }
 
     /**
