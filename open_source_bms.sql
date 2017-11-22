@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `os_admin_user`;
 CREATE TABLE `os_admin_user` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL DEFAULT '' COMMENT '管理员用户名',
-  `password` varchar(50) NOT NULL DEFAULT '' COMMENT '管理员密码',
+  `password` varchar(128) NOT NULL DEFAULT '' COMMENT '管理员密码',
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态 1 启用 0 禁用',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `last_login_time` datetime DEFAULT NULL COMMENT '最后登录时间',
@@ -34,7 +34,7 @@ CREATE TABLE `os_admin_user` (
 -- ----------------------------
 -- Records of os_admin_user
 -- ----------------------------
-INSERT INTO `os_admin_user` VALUES ('1', 'admin', '0dfc7612f607db6c17fd99388e9e5f9c', '1', '2016-10-18 15:28:37', '2017-04-12 12:45:08', '127.0.0.1');
+INSERT INTO `os_admin_user` VALUES ('1', 'admin', '$2a$08$i2dGoma684/trGaB7cz1ruJSf5FGCbPbcPqQDS6bIK3kXQ.TbFlOa', '1', '2016-10-18 15:28:37', '2017-04-12 12:45:08', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for os_article

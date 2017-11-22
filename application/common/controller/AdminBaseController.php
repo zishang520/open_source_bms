@@ -1,12 +1,12 @@
 <?php
 namespace app\common\controller;
 
-use org\Auth;
-use think\Loader;
-use think\Cache;
+use app\common\model\AdminUser;
+use app\common\model\AuthRule;
 use think\Controller;
-use think\Db;
+use think\Loader;
 use think\Session;
+use think\View;
 
 /**
  * 后台公用基础控制器
@@ -15,6 +15,9 @@ use think\Session;
  */
 class AdminBaseController extends Controller
 {
+
+    protected static $admin_user = null;
+
     protected function _initialize()
     {
         parent::_initialize();
@@ -23,8 +26,8 @@ class AdminBaseController extends Controller
         $this->getMenu();
 
         // 输出当前请求控制器（配合后台侧边菜单选中状态）
-        $this->assign('module', Loader::parseName($this->request->module()));
-        $this->assign('controller', Loader::parseName($this->request->controller()));
+        View::share('module', Loader::parseName($this->request->module()));
+        View::share('controller', Loader::parseName($this->request->controller()));
     }
 
     /**
@@ -33,22 +36,19 @@ class AdminBaseController extends Controller
      */
     protected function checkAuth()
     {
-
         if (!Session::has('admin_id')) {
-            $this->redirect('admin/login/index');
+            return $this->redirect('admin/login/index');
         }
 
-        $module     = $this->request->module();
+        $module = $this->request->module();
         $controller = $this->request->controller();
-        $action     = $this->request->action();
-
+        $action = $this->request->action();
+        self::$admin_user = AdminUser::where(['id' => Session::get('admin_id')])->find();
         // 排除权限
         $not_check = ['admin/Index/index', 'admin/AuthGroup/getjson', 'admin/System/clear'];
 
         if (!in_array($module . '/' . $controller . '/' . $action, $not_check)) {
-            $auth     = new Auth();
-            $admin_id = Session::get('admin_id');
-            if (!$auth->check($module . '/' . $controller . '/' . $action, $admin_id) && $admin_id != 1) {
+            if (!(self::$admin_user->can($module . '/' . $controller . '/' . $action)) && self::$admin_user->id != 1) {
                 return $this->error('没有权限');
             }
         }
@@ -59,22 +59,17 @@ class AdminBaseController extends Controller
      */
     protected function getMenu()
     {
-        $menu     = [];
-        $admin_id = Session::get('admin_id');
-        $auth     = new Auth();
-
+        $menu = [];
 
         $module = $this->request->module();
-        $auth_rule_list = Db::name('auth_rule')->where('status', 1)->where('name','like',$module.'/%')->order(['sort' => 'DESC', 'id' => 'ASC'])->select();
-
-        foreach ($auth_rule_list as $value) {
-            if ($auth->check($value['name'], $admin_id) || $admin_id == 1) {
+        $auth_rule_list = AuthRule::where('status', 1)->where('name', 'like', $module . '/%')->order(['sort' => 'DESC', 'id' => 'ASC'])->select();
+        foreach ($auth_rule_list->toArray() as $value) {
+            if (self::$admin_user->can($value['name']) || self::$admin_user->id == 1) {
                 $menu[] = $value;
             }
         }
         $menu = !empty($menu) ? array2tree($menu) : [];
-
-        $this->assign('menu', $menu);
+        View::share('menu', $menu);
     }
 
     public function _empty()

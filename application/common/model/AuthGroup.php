@@ -2,7 +2,7 @@
 
 namespace app\common\model;
 
-use think\Model;
+use luoyy\Entrust\EntrustRole;
 
 /**
  * This is the model class for table "os_auth_group".
@@ -12,7 +12,7 @@ use think\Model;
  * @property integer $status
  * @property string $rules
  */
-class AuthGroup extends Model
+class AuthGroup extends EntrustRole
 {
 
 }

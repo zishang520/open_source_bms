@@ -2,7 +2,7 @@
 
 namespace app\common\model;
 
-use think\Model;
+use luoyy\Entrust\EntrustPermission;
 
 /**
  * This is the model class for table "os_auth_rule".
@@ -17,7 +17,7 @@ use think\Model;
  * @property integer $sort
  * @property string $condition
  */
-class AuthRule extends Model
+class AuthRule extends EntrustPermission
 {
 
 }
