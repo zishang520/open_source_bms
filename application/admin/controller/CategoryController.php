@@ -4,6 +4,7 @@ namespace app\admin\controller;
 use app\common\controller\AdminBaseController;
 use app\common\model\Article;
 use app\common\model\ArticleCategory;
+use think\Request;
 
 /**
  * 栏目管理
@@ -12,25 +13,14 @@ use app\common\model\ArticleCategory;
  */
 class CategoryController extends AdminBaseController
 {
-
-    protected $categoryModel;
-    protected $articleModel;
-
-    protected function _initialize()
-    {
-        parent::_initialize();
-        $this->articleModel = new Article();
-
-        $this->assign('category_level_list', ArticleCategory::getLevelList());
-    }
-
     /**
      * 栏目管理
      * @return mixed
      */
     public function index()
     {
-        return $this->fetch();
+        return view('category/index')
+            ->assign('category_level_list', ArticleCategory::getLevelList());
     }
 
     /**
@@ -40,22 +30,23 @@ class CategoryController extends AdminBaseController
      */
     public function add($pid = '')
     {
-        return $this->fetch('add', ['pid' => $pid]);
+        return view('category/add')
+            ->assign('pid', $pid)
+            ->assign('category_level_list', ArticleCategory::getLevelList());
     }
 
     /**
      * 保存栏目
      */
-    public function save()
+    public function save(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data = $this->request->param();
-            $validate_result = $this->validate($data, 'Category');
-
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'CategorySave');
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                if ((new ArticleCategory)->allowField(true)->save($data)) {
+                if ((new ArticleCategory)->allowField(true)->isUpdate(false)->save($data)) {
                     return $this->success('保存成功');
                 } else {
                     return $this->error('保存失败');
@@ -72,28 +63,32 @@ class CategoryController extends AdminBaseController
     public function edit($id)
     {
         $category = ArticleCategory::where(['id' => $id])->find();
-
-        return $this->fetch('edit', ['category' => $category]);
+        if (empty($category)) {
+            return $this->error('栏目不存在');
+        }
+        return view('category/edit')
+            ->assign('category', $category)
+            ->assign('category_level_list', ArticleCategory::getLevelList());
     }
 
     /**
      * 更新栏目
      * @param $id
      */
-    public function update($id)
+    public function update(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data = $this->request->param();
-            $validate_result = $this->validate($data, 'Category');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'CategoryUpdate');
 
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                $children = ArticleCategory::where(['path' => ['like', "%,{$id},%"]])->column('id');
+                $children = ArticleCategory::where(['path' => ['like', "%,{$data['id']},%"]])->column('id');
                 if (in_array($data['pid'], $children)) {
                     return $this->error('不能移动到自己的子分类');
                 } else {
-                    if ((new ArticleCategory)->allowField(true)->save($data, $id) !== false) {
+                    if ((new ArticleCategory)->allowField(true)->isUpdate(true)->save($data, ['id' => $data['id']]) !== false) {
                         return $this->success('更新成功');
                     } else {
                         return $this->error('更新失败');
