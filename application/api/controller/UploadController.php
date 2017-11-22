@@ -21,7 +21,6 @@ class UploadController extends Controller
                 'error' => 1,
                 'message' => '未登录',
             ];
-
             return abort(json($result));
         }
     }

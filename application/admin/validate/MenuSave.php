@@ -3,7 +3,7 @@ namespace app\admin\validate;
 
 use think\Validate;
 
-class Menu extends Validate
+class MenuSave extends Validate
 {
     protected $rule = [
         'pid'   => 'require',

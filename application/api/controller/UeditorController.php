@@ -1,8 +1,9 @@
 <?php
 namespace app\api\controller;
 
-use think\Controller;
+use luoyy\JSObject\JSON;
 use org\UeditorUpload;
+use think\Controller;
 use think\Session;
 
 /**
@@ -19,15 +20,14 @@ class UeditorController extends Controller
     {
         parent::_initialize();
 
-        if(!Session::get('admin_id')){
+        if (!Session::get('admin_id')) {
             $result = [
-                'state' => 'ERROR'
+                'state' => 'ERROR',
             ];
-
             return abort(json($result));
         }
 
-        $this->config = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents(ROOT_PATH . 'public/static/js/ueditor/config.json')), true);
+        $this->config = JSON::decode(file_get_contents(ROOT_PATH . 'public/static/js/ueditor/config.json'), true);
         $this->action = $this->request->get('action');
     }
 
@@ -44,11 +44,11 @@ class UeditorController extends Controller
 
             /* 上传图片 */
             case 'uploadimage':
-                /* 上传涂鸦 */
+            /* 上传涂鸦 */
             case 'uploadscrawl':
-                /* 上传视频 */
+            /* 上传视频 */
             case 'uploadvideo':
-                /* 上传文件 */
+            /* 上传文件 */
             case 'uploadfile':
                 $result = $this->upload();
                 break;
@@ -69,7 +69,7 @@ class UeditorController extends Controller
 
             default:
                 $result = [
-                    'state' => '请求地址出错'
+                    'state' => '请求地址出错',
                 ];
                 break;
         }
@@ -80,7 +80,7 @@ class UeditorController extends Controller
                 return htmlspecialchars($_GET["callback"]) . '(' . $result . ')';
             } else {
                 return json([
-                    'state' => 'callback参数不合法'
+                    'state' => 'callback参数不合法',
                 ]);
             }
         } else {
@@ -98,36 +98,36 @@ class UeditorController extends Controller
         $base64 = "upload";
         switch ($this->action) {
             case 'uploadimage':
-                $param     = [
+                $param = [
                     "pathFormat" => $this->config['imagePathFormat'],
-                    "maxSize"    => $this->config['imageMaxSize'],
-                    "allowFiles" => $this->config['imageAllowFiles']
+                    "maxSize" => $this->config['imageMaxSize'],
+                    "allowFiles" => $this->config['imageAllowFiles'],
                 ];
                 $fieldName = $this->config['imageFieldName'];
                 break;
             case 'uploadscrawl':
-                $param     = [
+                $param = [
                     "pathFormat" => $this->config['scrawlPathFormat'],
-                    "maxSize"    => $this->config['scrawlMaxSize'],
-                    "oriName"    => "scrawl.png"
+                    "maxSize" => $this->config['scrawlMaxSize'],
+                    "oriName" => "scrawl.png",
                 ];
                 $fieldName = $this->config['scrawlFieldName'];
-                $base64    = "base64";
+                $base64 = "base64";
                 break;
             case 'uploadvideo':
-                $param     = [
+                $param = [
                     "pathFormat" => $this->config['videoPathFormat'],
-                    "maxSize"    => $this->config['videoMaxSize'],
-                    "allowFiles" => $this->config['videoAllowFiles']
+                    "maxSize" => $this->config['videoMaxSize'],
+                    "allowFiles" => $this->config['videoAllowFiles'],
                 ];
                 $fieldName = $this->config['videoFieldName'];
                 break;
             case 'uploadfile':
             default:
-                $param     = [
+                $param = [
                     "pathFormat" => $this->config['filePathFormat'],
-                    "maxSize"    => $this->config['fileMaxSize'],
-                    "allowFiles" => $this->config['fileAllowFiles']
+                    "maxSize" => $this->config['fileMaxSize'],
+                    "allowFiles" => $this->config['fileAllowFiles'],
                 ];
                 $fieldName = $this->config['fileFieldName'];
                 break;
@@ -164,32 +164,32 @@ class UeditorController extends Controller
             /* 列出文件 */
             case 'listfile':
                 $allowFiles = $this->config['fileManagerAllowFiles'];
-                $listSize   = $this->config['fileManagerListSize'];
-                $path       = $this->config['fileManagerListPath'];
+                $listSize = $this->config['fileManagerListSize'];
+                $path = $this->config['fileManagerListPath'];
                 break;
             /* 列出图片 */
             case 'listimage':
             default:
                 $allowFiles = $this->config['imageManagerAllowFiles'];
-                $listSize   = $this->config['imageManagerListSize'];
-                $path       = $this->config['imageManagerListPath'];
+                $listSize = $this->config['imageManagerListSize'];
+                $path = $this->config['imageManagerListPath'];
         }
         $allowFiles = substr(str_replace(".", "|", join("", $allowFiles)), 1);
 
         /* 获取参数 */
-        $size  = isset($_GET['size']) ? htmlspecialchars($_GET['size']) : $listSize;
+        $size = isset($_GET['size']) ? htmlspecialchars($_GET['size']) : $listSize;
         $start = isset($_GET['start']) ? htmlspecialchars($_GET['start']) : 0;
-        $end   = $start + $size;
+        $end = $start + $size;
 
         /* 获取文件列表 */
-        $path  = $_SERVER['DOCUMENT_ROOT'] . (substr($path, 0, 1) == "/" ? "" : "/") . $path;
+        $path = $_SERVER['DOCUMENT_ROOT'] . (substr($path, 0, 1) == "/" ? "" : "/") . $path;
         $files = $this->getFiles($path, $allowFiles);
         if (!count($files)) {
             return [
                 "state" => "no match file",
-                "list"  => [],
+                "list" => [],
                 "start" => $start,
-                "total" => count($files)
+                "total" => count($files),
             ];
         }
 
@@ -207,9 +207,9 @@ class UeditorController extends Controller
         /* 返回数据 */
         $result = [
             "state" => "SUCCESS",
-            "list"  => $list,
+            "list" => $list,
             "start" => $start,
-            "total" => count($files)
+            "total" => count($files),
         ];
 
         return $result;
@@ -222,11 +222,11 @@ class UeditorController extends Controller
     private function crawler()
     {
         /* 上传配置 */
-        $config    = [
+        $config = [
             "pathFormat" => $this->config['catcherPathFormat'],
-            "maxSize"    => $this->config['catcherMaxSize'],
+            "maxSize" => $this->config['catcherMaxSize'],
             "allowFiles" => $this->config['catcherAllowFiles'],
-            "oriName"    => "remote.png"
+            "oriName" => "remote.png",
         ];
         $fieldName = $this->config['catcherFieldName'];
 
@@ -241,12 +241,12 @@ class UeditorController extends Controller
             $item = new UeditorUpload($imgUrl, $config, "remote");
             $info = $item->getFileInfo();
             array_push($list, [
-                "state"    => $info["state"],
-                "url"      => $info["url"],
-                "size"     => $info["size"],
-                "title"    => htmlspecialchars($info["title"]),
+                "state" => $info["state"],
+                "url" => $info["url"],
+                "size" => $info["size"],
+                "title" => htmlspecialchars($info["title"]),
                 "original" => htmlspecialchars($info["original"]),
-                "source"   => htmlspecialchars($imgUrl)
+                "source" => htmlspecialchars($imgUrl),
             ]);
         }
 
@@ -254,7 +254,7 @@ class UeditorController extends Controller
 
         return [
             'state' => count($list) ? 'SUCCESS' : 'ERROR',
-            'list'  => $list
+            'list' => $list,
         ];
     }
 
@@ -267,8 +267,14 @@ class UeditorController extends Controller
      */
     private function getFiles($path, $allowFiles, &$files = [])
     {
-        if (!is_dir($path)) return null;
-        if (substr($path, strlen($path) - 1) != '/') $path .= '/';
+        if (!is_dir($path)) {
+            return null;
+        }
+
+        if (substr($path, strlen($path) - 1) != '/') {
+            $path .= '/';
+        }
+
         $handle = opendir($path);
         while (false !== ($file = readdir($handle))) {
             if ($file != '.' && $file != '..') {
@@ -278,8 +284,8 @@ class UeditorController extends Controller
                 } else {
                     if (preg_match("/\.(" . $allowFiles . ")$/i", $file)) {
                         $files[] = [
-                            'url'   => substr($path2, strlen($_SERVER['DOCUMENT_ROOT'])),
-                            'mtime' => filemtime($path2)
+                            'url' => substr($path2, strlen($_SERVER['DOCUMENT_ROOT'])),
+                            'mtime' => filemtime($path2),
                         ];
                     }
                 }

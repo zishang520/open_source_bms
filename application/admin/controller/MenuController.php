@@ -1,9 +1,8 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\model\AuthRule as AuthRuleModel;
 use app\common\controller\AdminBaseController;
-use think\Db;
+use app\common\model\AuthRule;
 
 /**
  * 后台菜单
@@ -12,26 +11,14 @@ use think\Db;
  */
 class MenuController extends AdminBaseController
 {
-
-    protected $authRuleModel;
-
-    protected function _initialize()
-    {
-        parent::_initialize();
-        $this->authRuleModel = new AuthRuleModel();
-        $admin_menu_list       = $this->authRuleModel->order(['sort' => 'DESC', 'id' => 'ASC'])->select();
-        $admin_menu_level_list = array2level($admin_menu_list);
-
-        $this->assign('admin_menu_level_list', $admin_menu_level_list);
-    }
-
     /**
      * 后台菜单
      * @return mixed
      */
     public function index()
     {
-        return $this->fetch();
+        return view('menu/index')
+            ->assign('admin_menu_level_list', AuthRule::getLevelList());
     }
 
     /**
@@ -41,22 +28,24 @@ class MenuController extends AdminBaseController
      */
     public function add($pid = '')
     {
-        return $this->fetch('add', ['pid' => $pid]);
+        return view('menu/add')
+            ->assign('pid', $pid)
+            ->assign('admin_menu_level_list', AuthRule::getLevelList());
     }
 
     /**
      * 保存菜单
      */
-    public function save()
+    public function save(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->post();
-            $validate_result = $this->validate($data, 'Menu');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'MenuSave');
 
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                if ($this->authRuleModel->save($data)) {
+                if ((new AuthRule)->allowField(true)->isUpdate(false)->save($data)) {
                     return $this->success('保存成功');
                 } else {
                     return $this->error('保存失败');
@@ -72,25 +61,29 @@ class MenuController extends AdminBaseController
      */
     public function edit($id)
     {
-        $admin_menu = $this->authRuleModel->find($id);
-
-        return $this->fetch('edit', ['admin_menu' => $admin_menu]);
+        $admin_menu = AuthRule::where(['id' => $id])->find();
+        if (empty($admin_menu)) {
+            return $this->error('获取数据失败');
+        }
+        return view('menu/edit')
+            ->assign('admin_menu', $admin_menu)
+            ->assign('admin_menu_level_list', AuthRule::getLevelList());
     }
 
     /**
      * 更新菜单
      * @param $id
      */
-    public function update($id)
+    public function update(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->post();
-            $validate_result = $this->validate($data, 'Menu');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'MenuUpdate');
 
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                if ($this->authRuleModel->save($data, $id) !== false) {
+                if ((new AuthRule)->allowField(true)->isUpdate(true)->save($data, ['id' => $data['id']]) !== false) {
                     return $this->success('更新成功');
                 } else {
                     return $this->error('更新失败');
@@ -105,11 +98,10 @@ class MenuController extends AdminBaseController
      */
     public function delete($id)
     {
-        $sub_menu = $this->authRuleModel->where(['pid' => $id])->find();
-        if (!empty($sub_menu)) {
+        if (AuthRule::where(['pid' => $id])->count() > 0) {
             return $this->error('此菜单下存在子菜单，不可删除');
         }
-        if ($this->authRuleModel->destroy($id)) {
+        if (AuthRule::destroy($id)) {
             return $this->success('删除成功');
         } else {
             return $this->error('删除失败');

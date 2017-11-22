@@ -19,5 +19,12 @@ use luoyy\Entrust\EntrustPermission;
  */
 class AuthRule extends EntrustPermission
 {
-
+    /**
+     * 获取层级缩进列表数据
+     * @return array
+     */
+    public static function getLevelList()
+    {
+        return array2level(self::order(['sort' => 'DESC'])->select()->toArray());
+    }
 }
