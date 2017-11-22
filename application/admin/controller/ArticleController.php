@@ -68,7 +68,7 @@ class ArticleController extends AdminBaseController
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                if ((new Article)->allowField(true)->isUpdate(false)->save($data)) {
+                if ((new Article)->allowField(true)->isUpdate(false)->save($data) !== false) {
                     return $this->success('保存成功');
                 } else {
                     return $this->error('保存失败');
@@ -150,7 +150,7 @@ class ArticleController extends AdminBaseController
             foreach ($ids as $value) {
                 $data[] = ['id' => $value, 'status' => $status];
             }
-            if ((new Article)->saveAll($data)) {
+            if ((new Article)->saveAll($data) !== false) {
                 return $this->success('操作成功');
             } else {
                 return $this->error('操作失败');

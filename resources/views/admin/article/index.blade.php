@@ -41,7 +41,7 @@
                     <table class="layui-table">
                         <colgroup>
                             <col width="15">
-                            <col width="50">
+                            <col width="100">
                             <col>
                         </colgroup>
                         <thead>

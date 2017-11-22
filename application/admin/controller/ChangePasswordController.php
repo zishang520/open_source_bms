@@ -34,7 +34,7 @@ class ChangePasswordController extends AdminBaseController
             } else {
                 if (self::$admin_user->verifyPassword($data['old_password'])) {
                     self::$admin_user->password = $data['password'];
-                    if (self::$admin_user->isUpdate(true)->save()) {
+                    if (self::$admin_user->isUpdate(true)->save() !== false) {
                         Session::delete('admin_id');
                         Session::delete('admin_name');
                         return $this->success('修改成功', '/admin/Login/index');

@@ -8,7 +8,7 @@ use think\Validate;
  * Class Link
  * @package app\admin\validate
  */
-class Link extends Validate
+class LinkSave extends Validate
 {
     protected $rule = [
         'name' => 'require'

@@ -47,7 +47,7 @@ class AdminUserController extends AdminBaseController
                 return $this->error($validate_result);
             } else {
                 $adminUserModel = new AdminUser();
-                if ($adminUserModel->allowField(true)->save($data)) {
+                if ($adminUserModel->allowField(true)->save($data) !== false) {
                     $adminUserModel->saveRole($data['group_id']);
                     return $this->success('保存成功');
                 } else {

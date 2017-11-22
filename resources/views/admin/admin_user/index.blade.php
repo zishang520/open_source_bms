@@ -10,9 +10,14 @@
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
                 <table class="layui-table">
+                    <colgroup>
+                        <col width="15">
+                        <col width="100">
+                        <col>
+                    </colgroup>
                     <thead>
                     <tr>
-                        <th style="width: 30px;">ID</th>
+                        <th>ID</th>
                         <th>用户名</th>
                         <th>状态</th>
                         <th>创建时间</th>

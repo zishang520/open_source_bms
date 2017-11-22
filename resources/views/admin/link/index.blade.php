@@ -10,10 +10,15 @@
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
                 <table class="layui-table">
+                    <colgroup>
+                        <col width="15">
+                        <col width="100">
+                        <col>
+                    </colgroup>
                     <thead>
                     <tr>
-                        <th style="width: 30px;">ID</th>
-                        <th style="width: 30px;">排序</th>
+                        <th>ID</th>
+                        <th>排序</th>
                         <th>名称</th>
                         <th>链接</th>
                         <th>状态</th>
@@ -36,6 +41,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                {!! $link_list->render() !!}
             </div>
         </div>
     </div>

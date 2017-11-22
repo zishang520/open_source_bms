@@ -46,7 +46,7 @@ class CategoryController extends AdminBaseController
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                if ((new ArticleCategory)->allowField(true)->isUpdate(false)->save($data)) {
+                if ((new ArticleCategory)->allowField(true)->isUpdate(false)->save($data) !== false) {
                     return $this->success('保存成功');
                 } else {
                     return $this->error('保存失败');
