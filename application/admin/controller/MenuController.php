@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 use app\common\controller\AdminBaseController;
 use app\common\model\AuthRule;
+use think\Request;
 
 /**
  * 后台菜单
