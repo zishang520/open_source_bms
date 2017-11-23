@@ -2,7 +2,7 @@
 namespace app\index\controller;
 
 use app\common\controller\HomeBaseController;
-use app\common\model\ArticleCategory as CategoryModel;
+use app\common\model\ArticleCategory;
 use think\Controller;
 use think\Db;
 
@@ -22,7 +22,7 @@ class ShowListController extends HomeBaseController
         }
 
         // 当前分类
-        $current = CategoryModel::get($cid);
+        $current = ArticleCategory::get($cid);
         if (empty($current)) {
             return false;
         }
@@ -31,7 +31,7 @@ class ShowListController extends HomeBaseController
         $path         = explode(',', $current['path']);
         $pid          = !empty($path[1]) ? $path[1] : $cid;
         // 当前分类顶级父类
-        $parent = CategoryModel::get($pid);
+        $parent = ArticleCategory::get($pid);
         // 当前分类所有子分类
         $children = get_category_children($pid);
 

@@ -2,8 +2,8 @@
 namespace app\index\controller;
 
 use app\common\controller\HomeBaseController;
-use app\common\model\Article as ArticleModel;
-use app\common\model\ArticleCategory as CategoryModel;
+use app\common\model\Article;
+use app\common\model\ArticleCategory;
 use think\Controller;
 use think\Db;
 
@@ -23,8 +23,8 @@ class ArticleController extends HomeBaseController
             return false;
         }
 
-        $category_model = new CategoryModel();
-        $article_model  = new ArticleModel();
+        $category_model = new ArticleCategory();
+        $article_model  = new Article();
 
         // 当前分类
         $current = $category_model->get($cid);
