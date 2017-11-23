@@ -85,7 +85,7 @@ class NavController extends AdminBaseController
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                if ((new Nav)->allowField(true)->isUpdate(true)->save($data, ['id' => $id]) !== false) {
+                if ((new Nav)->allowField(true)->isUpdate(true)->save($data, ['id' => $data['id']]) !== false) {
                     return $this->success('更新成功');
                 } else {
                     return $this->error('更新失败');

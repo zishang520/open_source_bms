@@ -97,16 +97,16 @@ class ArticleController extends AdminBaseController
      * 更新文章
      * @param $id
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         if ($request->isPost()) {
             $data = $request->post();
-            $validate_result = $this->validate($data, 'Article');
+            $validate_result = $this->validate($data, 'ArticleUpdate');
 
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                if ((new Article)->allowField(true)->isUpdate(true)->save($data, ['id' => $id]) !== false) {
+                if ((new Article)->allowField(true)->isUpdate(true)->save($data, ['id' => $data['id']]) !== false) {
                     return $this->success('更新成功');
                 } else {
                     return $this->error('更新失败');

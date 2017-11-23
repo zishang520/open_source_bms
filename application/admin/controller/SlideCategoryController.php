@@ -2,7 +2,8 @@
 namespace app\admin\controller;
 
 use app\common\controller\AdminBaseController;
-use think\Db;
+use app\common\model\SlideCategory;
+use think\Request;
 
 /**
  * 轮播图分类
@@ -17,9 +18,8 @@ class SlideCategoryController extends AdminBaseController
      */
     public function index()
     {
-        $slide_category_list = Db::name('slide_category')->select();
-
-        return $this->fetch('index', ['slide_category_list' => $slide_category_list]);
+        return view('slide_category/index')
+            ->assign('slide_category_list', SlideCategory::paginate(15, false));
     }
 
     /**
@@ -28,21 +28,26 @@ class SlideCategoryController extends AdminBaseController
      */
     public function add()
     {
-        return $this->fetch();
+        return view('slide_category/add');
     }
 
     /**
      * 保存分类
      */
-    public function save()
+    public function save(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data = $this->request->post();
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'SlideCategory');
 
-            if (Db::name('slide_category')->insert($data)) {
-                return $this->success('保存成功');
+            if ($validate_result !== true) {
+                return $this->error($validate_result);
             } else {
-                return $this->error('保存失败');
+                if ((new SlideCategory)->allowField(true)->isUpdate(false)->save($data)) {
+                    return $this->success('保存成功');
+                } else {
+                    return $this->error('保存失败');
+                }
             }
         }
     }
@@ -54,24 +59,32 @@ class SlideCategoryController extends AdminBaseController
      */
     public function edit($id)
     {
-        $slide_category = Db::name('slide_category')->find($id);
-
-        return $this->fetch('edit', ['slide_category' => $slide_category]);
+        $slide_category = SlideCategory::where(['id' => $id])->find();
+        if (empty($slide_category)) {
+            return $this->error('分类信息获取失败了');
+        }
+        return view('slide_category/edit')
+            ->assign('slide_category', $slide_category);
     }
 
     /**
      * 更新分类
      * @throws \think\Exception
      */
-    public function update()
+    public function update(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data = $this->request->post();
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'SlideCategoryUpdate');
 
-            if (Db::name('slide_category')->update($data) !== false) {
-                return $this->success('更新成功');
+            if ($validate_result !== true) {
+                return $this->error($validate_result);
             } else {
-                return $this->error('更新失败');
+                if ((new SlideCategory)->allowField(true)->isUpdate(true)->save($data, ['id' => $data['id']]) !== false) {
+                    return $this->success('更新成功');
+                } else {
+                    return $this->error('更新失败');
+                }
             }
         }
     }
@@ -83,7 +96,7 @@ class SlideCategoryController extends AdminBaseController
      */
     public function delete($id)
     {
-        if (Db::name('slide_category')->delete($id) !== false) {
+        if (SlideCategory::delete($id) !== false) {
             return $this->success('删除成功');
         } else {
             return $this->error('删除失败');

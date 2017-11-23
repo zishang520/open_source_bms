@@ -30,6 +30,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                {{ $slide_category_list->render() }}
             </div>
         </div>
     </div>
