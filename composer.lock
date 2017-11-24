@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "585adc720885f75ef2fc7ecedeb9969b",
-    "content-hash": "5c13b9aa2048e082fdcb901285ee84ed",
+    "hash": "1328e543ffd5ef9c35911cf2b3775b5e",
+    "content-hash": "ee887a6ec83d542cb14a62ccbc063e8b",
     "packages": [
         {
             "name": "luoyy/blade",
@@ -253,40 +253,6 @@
                 }
             ],
             "time": "2017-03-31 06:33:23"
-        },
-        {
-            "name": "zoujingli/wechat-php-sdk",
-            "version": "v1.3.11",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zoujingli/wechat-php-sdk.git",
-                "reference": "c0c55fe440418267ae97cc45809e4064c95744d0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://files.phpcomposer.com/files/zoujingli/wechat-php-sdk/c0c55fe440418267ae97cc45809e4064c95744d0.zip",
-                "reference": "c0c55fe440418267ae97cc45809e4064c95744d0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "project",
-            "autoload": {
-                "psr-4": {
-                    "Wechat\\": "./Wechat"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "WeChat development of SDK",
-            "homepage": "http://www.kancloud.cn/zoujingli/wechat-php-sdk",
-            "keywords": [
-                "wechat-php-sdk"
-            ],
-            "time": "2017-07-18 12:00:27"
         }
     ],
     "packages-dev": [],

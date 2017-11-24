@@ -1,9 +1,9 @@
 <?php
 
-use think\migration\Migrator;
 use think\migration\db\Column;
+use think\migration\Migrator;
 
-class Area extends Migrator
+class City extends Migrator
 {
     /**
      * Change Method.
@@ -28,6 +28,6 @@ class Area extends Migrator
      */
     public function change()
     {
-        $this->execute(file_get_contents(__DIR__.'/area.sql'));
+        $this->execute(file_get_contents(__DIR__ . '/os_city.sql'));
     }
 }
