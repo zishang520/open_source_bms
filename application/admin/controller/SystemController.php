@@ -2,8 +2,8 @@
 namespace app\admin\controller;
 
 use app\common\controller\AdminBaseController;
-use think\Cache;
-use think\Db;
+use app\common\model\System;
+use think\Request;
 
 /**
  * 系统配置
@@ -15,27 +15,29 @@ class SystemController extends AdminBaseController
     /**
      * 站点配置
      */
-    public function siteConfig()
+    public function site_config()
     {
-        $site_config = Db::name('system')->field('value')->where('name', 'site_config')->find();
-        $site_config = unserialize($site_config['value']);
-
-        return $this->fetch('site_config', ['site_config' => $site_config]);
+        return view('system/site_config')
+            ->assign('site_config', System::field('value')->where('name', 'site_config')->find()->value);
     }
 
     /**
      * 更新配置
      */
-    public function updateSiteConfig()
+    public function update_site_config(Request $request)
     {
-        if ($this->request->isPost()) {
-            $site_config                = $this->request->post('site_config/a');
-            $site_config['site_tongji'] = htmlspecialchars_decode($site_config['site_tongji']);
-            $data['value']              = serialize($site_config);
-            if (Db::name('system')->where('name', 'site_config')->update($data) !== false) {
-                return $this->success('提交成功');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'UpdateSiteConfig');
+
+            if ($validate_result !== true) {
+                return $this->error($validate_result);
             } else {
-                return $this->error('提交失败');
+                if ((new System)->updateOrCreate(['name' => 'site_config'], ['value' => $data['site_config']]) !== false) {
+                    return $this->success('提交成功');
+                } else {
+                    return $this->error('提交失败');
+                }
             }
         }
     }

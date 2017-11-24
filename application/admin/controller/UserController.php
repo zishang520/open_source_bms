@@ -1,10 +1,9 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\model\User as UserModel;
 use app\common\controller\AdminBaseController;
-use think\Config;
-use think\Db;
+use app\common\model\User;
+use think\Request;
 
 /**
  * 用户管理
@@ -13,29 +12,29 @@ use think\Db;
  */
 class UserController extends AdminBaseController
 {
-    protected $userModel;
-
-    protected function _initialize()
-    {
-        parent::_initialize();
-        $this->userModel = new UserModel();
-    }
-
     /**
      * 用户管理
      * @param string $keyword
      * @param int    $page
      * @return mixed
      */
-    public function index($keyword = '', $page = 1)
+    public function index(Request $request)
     {
         $map = [];
-        if ($keyword) {
-            $map['username|mobile|email'] = ['like', "%{$keyword}%"];
-        }
-        $user_list = $this->userModel->where($map)->order('id DESC')->paginate(15, false, ['page' => $page]);
+        $search = ['keyword' => ''];
+        $params = array_filter($request->get() + $search, function ($k) use ($search) {
+            return in_array($k, array_keys($search));
+        }, ARRAY_FILTER_USE_KEY);
 
-        return $this->fetch('index', ['user_list' => $user_list, 'keyword' => $keyword]);
+        if (isset($params['keyword']) && $params['keyword'] != '') {
+            $map['username|mobile|email'] = ['like', "%{$params['keyword']}%"];
+        }
+        $user_list = User::where($map)
+            ->order('id DESC')
+            ->paginate(15, false, ['query' => $params]);
+        return view('user/index')
+            ->assign('user_list', $user_list)
+            ->assign('search', $params);
     }
 
     /**
@@ -44,23 +43,22 @@ class UserController extends AdminBaseController
      */
     public function add()
     {
-        return $this->fetch();
+        return view('user/add');
     }
 
     /**
      * 保存用户
      */
-    public function save()
+    public function save(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->post();
+        if ($request->isPost()) {
+            $data = $request->post();
             $validate_result = $this->validate($data, 'User');
 
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                $data['password'] = md5($data['password'] . Config::get('salt'));
-                if ($this->userModel->allowField(true)->save($data)) {
+                if ((new User)->allowField(true)->isUpdate(true)->save($data)) {
                     return $this->success('保存成功');
                 } else {
                     return $this->error('保存失败');
@@ -76,8 +74,10 @@ class UserController extends AdminBaseController
      */
     public function edit($id)
     {
-        $user = $this->userModel->find($id);
-
+        $user = User::where(['id' => $id])->find();
+        if (empty($user)) {
+            return $this->error('获取用户信息失败');
+        }
         return $this->fetch('edit', ['user' => $user]);
     }
 
@@ -85,25 +85,27 @@ class UserController extends AdminBaseController
      * 更新用户
      * @param $id
      */
-    public function update($id)
+    public function update(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->post();
-            $validate_result = $this->validate($data, 'User');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'UserUpdate');
 
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                $user           = $this->userModel->find($id);
-                $user->id       = $id;
-                $user->username = $data['username'];
-                $user->mobile   = $data['mobile'];
-                $user->email    = $data['email'];
-                $user->status   = $data['status'];
-                if (!empty($data['password']) && !empty($data['confirm_password'])) {
-                    $user->password = md5($data['password'] . Config::get('salt'));
+                $user = User::where(['id' => $data['id']])->find();
+                if (empty($user)) {
+                    return $this->error('用户信息获取失败');
                 }
-                if ($user->save() !== false) {
+                $user->username = $data['username'];
+                $user->mobile = $data['mobile'];
+                $user->email = $data['email'];
+                $user->status = $data['status'];
+                if (!empty($data['password']) && !empty($data['confirm_password'])) {
+                    $user->password = $data['password'];
+                }
+                if ($user->isUpdate(true)->save() !== false) {
                     return $this->success('更新成功');
                 } else {
                     return $this->error('更新失败');
@@ -118,7 +120,7 @@ class UserController extends AdminBaseController
      */
     public function delete($id)
     {
-        if ($this->userModel->destroy($id)) {
+        if (User::destroy($id)) {
             return $this->success('删除成功');
         } else {
             return $this->error('删除失败');

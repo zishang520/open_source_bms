@@ -88,7 +88,10 @@ class AdminUserController extends AdminBaseController
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                $admin_user = AdminUser::find($data['id']);
+                $admin_user = AdminUser::where(['id' => $data['id']])->find();
+                if (empty($admin_user)) {
+                    return $this->error('用户信息获取失败');
+                }
                 $admin_user->username = $data['username'];
                 $admin_user->status = $data['status'];
                 if (!empty($data['password']) && !empty($data['confirm_password'])) {
