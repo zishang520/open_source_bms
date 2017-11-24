@@ -60,12 +60,11 @@ class AdminBaseController extends Controller
     protected function getMenu()
     {
         $menu = [];
-
         $module = $this->request->module();
         $auth_rule_list = AuthRule::where('status', 1)->where('name', 'like', $module . '/%')->order(['sort' => 'DESC', 'id' => 'ASC'])->select();
         foreach ($auth_rule_list->toArray() as $value) {
             if (self::$admin_user->can($value['name']) || self::$admin_user->id == 1) {
-                $menu[] = $value;
+                array_push($menu, $value);
             }
         }
         $menu = !empty($menu) ? array2tree($menu) : [];

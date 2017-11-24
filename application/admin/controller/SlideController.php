@@ -75,7 +75,7 @@ class SlideController extends AdminBaseController
      * 更新轮播图
      * @param $id
      */
-    public function update(Request $return)
+    public function update(Request $request)
     {
         if ($request->isPost()) {
             $data = $request->post();
