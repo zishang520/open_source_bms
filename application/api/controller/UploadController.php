@@ -3,6 +3,7 @@ namespace app\api\controller;
 
 use app\common\model\UploadImages;
 use think\Controller;
+use think\Request;
 use think\Session;
 
 /**
@@ -17,10 +18,9 @@ class UploadController extends Controller
         parent::_initialize();
         if (!Session::has('admin_id')) {
             $result = [
-                'error'   => 1,
-                'message' => '未登录'
+                'error' => 1,
+                'message' => '未登录',
             ];
-
             return abort(json($result));
         }
     }
@@ -29,37 +29,47 @@ class UploadController extends Controller
      * 通用图片上传接口
      * @return \think\response\Json
      */
-    public function upload()
+    public function upload(Request $request)
     {
-        $config = [
-            'size' => 2097152,
-            'ext'  => 'jpg,gif,png,bmp'
-        ];
-
-        $file = $this->request->file('file');
-
-
-        $upload_path = str_replace('\\', '/', ROOT_PATH . 'public/uploads');
-        $save_path   = '/uploads/';
-
-
-        $result = [
-            'error'   => 1,
-            'message' => '',
-        ];
-        if(!$file->validate($config)->check()){
-            $result['message'] = $file->getError();
-        }else{
-            $upload = new UploadImages();
-            $info = $upload->upload($file,$upload_path,$save_path);
-            if(empty($info)){
-                $result['message'] = $upload->getError();
-            }else{
-                $result['error'] = 0;
-                $result['message'] = '上传成功';
-                $result['url'] = $info->url;
-            }
+        $file = $request->file('file');
+        if (empty($file)) {
+            return json([
+                'error' => 1,
+                'message' => '请选择需要上传的图片',
+            ]);
         }
-        return json($result);
+        if (!is_object($file)) {
+            return json([
+                'error' => 1,
+                'message' => '文件上传格式错误，只接受单文件上传',
+            ]);
+        }
+        if (!$file->isValid()) {
+            return json([
+                'error' => 1,
+                'message' => '这是一个无效的文件',
+            ]);
+        }
+        if (!$file->validate(['size' => 2097152, 'ext' => 'jpg,gif,png,bmp'])->check()) {
+            return json([
+                'error' => 1,
+                'message' => $file->getError(),
+            ]);
+        }
+        $upload_path = str_replace(DS, '/', ROOT_PATH . 'public/uploads');
+        $save_path = '/uploads/';
+        $upload = new UploadImages();
+        $info = $upload->upload($file, $upload_path, $save_path);
+        if (!empty($info)) {
+            return json([
+                'error' => 0,
+                'message' => '上传成功',
+                'url' => $info->url,
+            ]);
+        }
+        return json([
+            'error' => 1,
+            'message' => $upload->getError(),
+        ]);
     }
 }

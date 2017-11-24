@@ -1,9 +1,11 @@
 <?php
 namespace app\common\controller;
 
+use app\common\model\Nav;
+use app\common\model\Slide;
+use app\common\model\System;
 use think\Cache;
 use think\Controller;
-use think\Db;
 
 class HomeBaseController extends Controller
 {
@@ -21,14 +23,10 @@ class HomeBaseController extends Controller
      */
     protected function getSystem()
     {
-        if (Cache::has('site_config')) {
-            $site_config = Cache::get('site_config');
-        } else {
-            $site_config = Db::name('system')->field('value')->where('name', 'site_config')->find();
-            $site_config = unserialize($site_config['value']);
-            Cache::set('site_config', $site_config);
-        }
-
+        $site_config = Cache::tag('site_config')->remember('system', function () {
+            $site_config = System::field('value')->where('name', 'site_config')->find();
+            return !empty($site_config) ? $site_config['value'] : [];
+        });
         $this->assign($site_config);
     }
 
@@ -37,16 +35,10 @@ class HomeBaseController extends Controller
      */
     protected function getNav()
     {
-        if (Cache::has('nav')) {
-            $nav = Cache::get('nav');
-        } else {
-            $nav = Db::name('nav')->where(['status' => 1])->order(['sort' => 'ASC'])->select();
-            $nav = !empty($nav) ? array2tree($nav) : [];
-            if (!empty($nav)) {
-                Cache::set('nav', $nav);
-            }
-        }
-
+        $nav = Cache::tag('nav')->remember('navs', function () {
+            $nav = Nav::where(['status' => 1])->order(['sort' => 'ASC'])->select()->toArray();
+            return !empty($nav) ? array2tree($nav) : [];
+        });
         $this->assign('nav', $nav);
     }
 
@@ -55,15 +47,9 @@ class HomeBaseController extends Controller
      */
     protected function getSlide()
     {
-        if (Cache::has('slide')) {
-            $slide = Cache::get('slide');
-        } else {
-            $slide = Db::name('slide')->where(['status' => 1, 'cid' => 1])->order(['sort' => 'DESC'])->select();
-            if (!empty($slide)) {
-                Cache::set('slide', $slide);
-            }
-        }
-
+        $slide = Cache::tag('slide')->remember('slides', function () {
+            return Slide::where(['status' => 1, 'cid' => 1])->order(['sort' => 'DESC'])->select()->toArray();
+        });
         $this->assign('slide', $slide);
     }
 }

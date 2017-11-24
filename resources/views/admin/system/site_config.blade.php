@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -8,7 +8,7 @@
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <form class="layui-form form-container" action="{{ url('admin/system/updateSiteConfig') }}" method="post">
+                <form class="layui-form form-container" action="{{ url('admin/System/update_site_config') }}" method="post">
                     <div class="layui-form-item">
                         <label class="layui-form-label">网站标题</label>
                         <div class="layui-input-block">

@@ -1,9 +1,9 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\model\Nav as NavModel;
 use app\common\controller\AdminBaseController;
-use think\Db;
+use app\common\model\Nav;
+use think\Request;
 
 /**
  * 导航管理
@@ -13,25 +13,14 @@ use think\Db;
 class NavController extends AdminBaseController
 {
 
-    protected $navModel;
-
-    protected function _initialize()
-    {
-        parent::_initialize();
-        $this->navModel = new NavModel();
-        $nav_list        = $this->navModel->order(['sort' => 'ASC', 'id' => 'ASC'])->select();
-        $nav_level_list  = array2level($nav_list);
-
-        $this->assign('nav_level_list', $nav_level_list);
-    }
-
     /**
      * 导航管理
      * @return mixed
      */
     public function index()
     {
-        return $this->fetch();
+        return view('nav/index')
+            ->assign('nav_level_list', Nav::getLevelList());
     }
 
     /**
@@ -41,25 +30,27 @@ class NavController extends AdminBaseController
      */
     public function add($pid = '')
     {
-        return $this->fetch('add', ['pid' => $pid]);
+        return view('nav/add')
+            ->assign('pid', $pid)
+            ->assign('nav_level_list', Nav::getLevelList());
     }
 
     /**
      * 保存导航
      */
-    public function save()
+    public function save(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->post();
-            $validate_result = $this->validate($data, 'Nav');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'NavSave');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
-                if ($this->navModel->save($data)) {
-                    $this->success('保存成功');
+                if ((new Nav)->allowField(true)->isUpdate(false)->save($data)) {
+                    return $this->success('保存成功');
                 } else {
-                    $this->error('保存失败');
+                    return $this->error('保存失败');
                 }
             }
         }
@@ -72,28 +63,32 @@ class NavController extends AdminBaseController
      */
     public function edit($id)
     {
-        $nav = $this->navModel->find($id);
-
-        return $this->fetch('edit', ['nav' => $nav]);
+        $nav = Nav::where(['id' => $id])->find();
+        if (empty($nav)) {
+            return $this->error('导航数据获取失败');
+        }
+        return view('nav/edit')
+            ->assign('nav', $nav)
+            ->assign('nav_level_list', Nav::getLevelList());
     }
 
     /**
      * 更新导航
      * @param $id
      */
-    public function update($id)
+    public function update(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->post();
-            $validate_result = $this->validate($data, 'Nav');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'NavUpdate');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
-                if ($this->navModel->save($data, $id) !== false) {
-                    $this->success('更新成功');
+                if ((new Nav)->allowField(true)->isUpdate(true)->save($data, ['id' => $data['id']]) !== false) {
+                    return $this->success('更新成功');
                 } else {
-                    $this->error('更新失败');
+                    return $this->error('更新失败');
                 }
             }
         }
@@ -105,10 +100,10 @@ class NavController extends AdminBaseController
      */
     public function delete($id)
     {
-        if ($this->navModel->destroy($id)) {
-            $this->success('删除成功');
+        if (Nav::destroy($id)) {
+            return $this->success('删除成功');
         } else {
-            $this->error('删除失败');
+            return $this->error('删除失败');
         }
     }
 }

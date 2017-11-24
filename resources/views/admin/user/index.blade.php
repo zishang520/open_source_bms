@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -14,7 +14,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">关键词</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="keyword" value="{{ $keyword }}" placeholder="请输入关键词" class="layui-input">
+                            <input type="text" name="keyword" value="{{ $search['keyword'] }}" placeholder="请输入关键词" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -24,9 +24,14 @@
                 <hr>
 
                 <table class="layui-table">
+                    <colgroup>
+                        <col width="15">
+                        <col width="100">
+                        <col>
+                    </colgroup>
                     <thead>
                     <tr>
-                        <th style="width: 30px;">ID</th>
+                        <th>ID</th>
                         <th>用户名</th>
                         <th>手机</th>
                         <th>邮箱</th>
@@ -57,7 +62,7 @@
                     </tbody>
                 </table>
                 <!--分页-->
-                {{ $user_list->render() }}
+                {!! $user_list->render() !!}
             </div>
         </div>
     </div>

@@ -29,4 +29,21 @@ class System extends Model
         }
         return serialize($val);
     }
+    /**
+     * [updateOrCreate 更新或者创建]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2017-08-11T14:42:02+0800
+     * @copyright (c)                      ZiShang520 All           Rights Reserved
+     * @param     array                    $where     [条件]
+     * @param     array                    $data      [数据]
+     * @return    [type]                              [description]
+     */
+    public function updateOrCreate(array $where, array $data)
+    {
+        if ($this->where($where)->count() > 0) {
+            return $this->isUpdate(true)->save($data, $where);
+        } else {
+            return $this->isUpdate(false)->save($where + $data, []);
+        }
+    }
 }

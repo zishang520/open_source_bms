@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -30,6 +30,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                {{ $slide_category_list->render() }}
             </div>
         </div>
     </div>

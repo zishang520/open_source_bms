@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -16,7 +16,7 @@
                             <select name="pid" lay-verify="required">
                                 <option value="0">一级栏目</option>
                                 @foreach($category_level_list as $vo)
-                                <option value="{{ $vo['id'] }}" @if($pid==$vo['id']) selected="selected"@endif>{neq name="vo.level" value="1"}|{php}for($i=1;$i<$vo['level'];$i++){echo ' ----';}{/php}{/neq} {{ $vo['name'] }}</option>
+                                <option value="{{ $vo['id'] }}" @if($pid==$vo['id']) selected="selected"@endif>{{ $vo['level'] != 1 ? '|' . str_repeat(' ----', $vo['level'] - 1) : '' }} {{ $vo['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -43,7 +43,7 @@
                         <label class="layui-form-label">缩略图</label>
                         <div class="layui-input-block">
                             <input type="text" name="thumb" value="" class="layui-input layui-input-inline" id="thumb">
-                            <input type="file" name="file" class="layui-upload-file">
+                            <input type="file" name="file" class="layui-upload-image">
                         </div>
                     </div>
                     <div class="layui-form-item">

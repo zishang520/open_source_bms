@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -17,7 +17,7 @@
                             <select name="pid" lay-verify="required">
                                 <option value="0">一级菜单</option>
                                 @foreach($admin_menu_level_list as $vo)
-                                <option value="{{ $vo['id'] }}" @if($admin_menu['id']==$vo['id']) disabled="disabled"@endif @if($admin_menu['pid']==$vo['id']) selected="selected"@endif>{neq name="vo.level" value="1"}|{php}for($i=1;$i<$vo['level'];$i++){echo ' ----';}{/php}{/neq} {{ $vo['title'] }}</option>
+                                <option value="{{ $vo['id'] }}" @if($admin_menu['id']==$vo['id']) disabled="disabled"@endif @if($admin_menu['pid']==$vo['id']) selected="selected"@endif>{{ $vo['level'] != 1 ? '|' . str_repeat(' ----', $vo['level'] - 1) : '' }} {{ $vo['title'] }}</option>
                                 @endforeach
                             </select>
                         </div>

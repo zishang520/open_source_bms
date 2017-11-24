@@ -1,9 +1,9 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\model\Link as LinkModel;
 use app\common\controller\AdminBaseController;
-use think\Db;
+use app\common\model\Link;
+use think\Request;
 
 /**
  * 友情链接
@@ -12,23 +12,14 @@ use think\Db;
  */
 class LinkController extends AdminBaseController
 {
-    protected $linkModel;
-
-    protected function _initialize()
-    {
-        parent::_initialize();
-        $this->linkModel = new LinkModel();
-    }
-
     /**
      * 友情链接
      * @return mixed
      */
     public function index()
     {
-        $link_list = $this->linkModel->select();
-
-        return $this->fetch('index', ['link_list' => $link_list]);
+        return view('link/index')
+            ->assign('link_list', Link::paginate(15, false));
     }
 
     /**
@@ -37,25 +28,25 @@ class LinkController extends AdminBaseController
      */
     public function add()
     {
-        return $this->fetch();
+        return view('link/add');
     }
 
     /**
      * 保存友情链接
      */
-    public function save()
+    public function save(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->param();
-            $validate_result = $this->validate($data, 'Link');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'LinkSave');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
-                if ($this->linkModel->allowField(true)->save($data)) {
-                    $this->success('保存成功');
+                if ((new Link)->allowField(true)->isUpdate(false)->save($data)) {
+                    return $this->success('保存成功');
                 } else {
-                    $this->error('保存失败');
+                    return $this->error('保存失败');
                 }
             }
         }
@@ -68,28 +59,31 @@ class LinkController extends AdminBaseController
      */
     public function edit($id)
     {
-        $link = $this->linkModel->find($id);
-
-        return $this->fetch('edit', ['link' => $link]);
+        $link = Link::where(['id' => $id])->find();
+        if (empty($link)) {
+            return $this->error('信息获取失败');
+        }
+        return view('link/edit')
+            ->assign('link', $link);
     }
 
     /**
      * 更新友情链接
      * @param $id
      */
-    public function update($id)
+    public function update(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->param();
-            $validate_result = $this->validate($data, 'Link');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'LinkUpdate');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
-                if ($this->linkModel->allowField(true)->save($data, $id) !== false) {
-                    $this->success('更新成功');
+                if ((new Link)->allowField(true)->isUpdate(true)->save($data, ['id' => $data['id']]) !== false) {
+                    return $this->success('更新成功');
                 } else {
-                    $this->error('更新失败');
+                    return $this->error('更新失败');
                 }
             }
         }
@@ -101,10 +95,10 @@ class LinkController extends AdminBaseController
      */
     public function delete($id)
     {
-        if ($this->linkModel->destroy($id)) {
-            $this->success('删除成功');
+        if (Link::destroy($id)) {
+            return $this->success('删除成功');
         } else {
-            $this->error('删除失败');
+            return $this->error('删除失败');
         }
     }
 }

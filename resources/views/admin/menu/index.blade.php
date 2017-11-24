@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -25,7 +25,7 @@
                     <tr>
                         <td>{{ $vo['id'] }}</td>
                         <td>{{ $vo['sort'] }}</td>
-                        <td>{neq name="vo.level" value="1"}|{php}for($i=1;$i<$vo['level'];$i++){echo ' ----';}{/php}{/neq} {{ $vo['title'] }}</td>
+                        <td>{{ $vo['level'] != 1 ? '|' . str_repeat(' ----', $vo['level'] - 1) : '' }} {{ $vo['title'] }}</td>
                         <td>{{ $vo['name'] }}</td>
                         <td>{{ $vo['status']==1 ? '显示' : '隐藏' }}</td>
                         <td>

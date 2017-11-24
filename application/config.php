@@ -9,17 +9,16 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-return [
-    // +----------------------------------------------------------------------
-    // | 应用设置
-    // +----------------------------------------------------------------------
+use app\common\exception\Http;
+use think\Env;
 
+return [
     // 应用命名空间
     'app_namespace' => 'app',
     // 应用调试模式
-    'app_debug' => true,
+    'app_debug' => Env::get('APP_DEBUG', false),
     // 应用Trace
-    'app_trace' => false,
+    'app_trace' => Env::get('APP_TRACE', false),
     // 应用模式状态
     'app_status' => '',
     // 是否支持多模块
@@ -68,7 +67,7 @@ return [
     ],
 
     // 全站加密密钥（开发新站点前请修改此项）
-    'salt' => 'fwefadfsdsafds',
+    'salt' => Env::get('APP_KEY'),
 
     // 验证码配置
     'captcha' => [
@@ -156,9 +155,9 @@ return [
         // 模板引擎类型 支持 php think 支持扩展
         'type' => 'Blade',
         // 视图基础目录（集中式）
-        'view_base' => ROOT_PATH . 'resources' . DS . 'views'. DS,
+        'view_base' => ROOT_PATH . 'resources' . DS . 'views' . DS,
         // 模板起始路径
-        'view_path' => '',
+        'view_path' => ROOT_PATH . 'resources' . DS . 'views' . DS,
         // 模板文件名分隔符
         'view_depr' => DS,
         // 模板缓存目录
@@ -184,22 +183,22 @@ return [
     ],
 
     // 默认跳转页面对应的模板文件
-    'dispatch_success_tmpl' => ROOT_PATH . 'resources' . DS . 'views' . DS . 'common' . DS .'dispatch_jump.blade.php',
-    'dispatch_error_tmpl' => ROOT_PATH . 'resources' . DS . 'views' . DS . 'common' . DS .'dispatch_jump.blade.php',
+    'dispatch_success_tmpl' => ROOT_PATH . 'resources' . DS . 'views' . DS . 'common' . DS . 'dispatch_jump.blade.php',
+    'dispatch_error_tmpl' => ROOT_PATH . 'resources' . DS . 'views' . DS . 'common' . DS . 'dispatch_jump.blade.php',
 
     // +----------------------------------------------------------------------
     // | 异常及错误设置
     // +----------------------------------------------------------------------
 
     // 异常页面的模板文件
-    'exception_tmpl' => ROOT_PATH . 'resources' . DS . 'views' . DS . 'common' . DS .'think_exception.blade.php',
+    'exception_tmpl' => ROOT_PATH . 'resources' . DS . 'views' . DS . 'common' . DS . 'think_exception.blade.php',
 
     // 错误显示信息,非调试模式有效
     'error_message' => '页面错误！请稍后再试～',
     // 显示错误信息
     'show_error_msg' => false,
     // 异常处理handle类 留空使用 \think\exception\Handle
-    'exception_handle' => '\\app\\common\\exception\\Http',
+    'exception_handle' => Http::class,
 
     // +----------------------------------------------------------------------
     // | 日志设置
@@ -235,6 +234,8 @@ return [
         'prefix' => '',
         // 缓存有效期 0表示永久缓存
         'expire' => 0,
+        // tag缓存时间
+        'ttl' => 60,
     ],
 
     // +----------------------------------------------------------------------

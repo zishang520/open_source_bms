@@ -2,7 +2,10 @@
 namespace app\admin\controller;
 
 use app\common\controller\AdminBaseController;
+use think\Cache;
+use think\Config;
 use think\Db;
+use think\Request;
 
 /**
  * 后台首页
@@ -11,29 +14,24 @@ use think\Db;
  */
 class IndexController extends AdminBaseController
 {
-    protected function _initialize()
-    {
-        parent::_initialize();
-    }
-
     /**
      * 首页
      * @return mixed
      */
-    public function index()
+    public function index(Request $request)
     {
-        $version = Db::query('SELECT VERSION() AS ver');
-        $config  = [
-            'url'             => $_SERVER['HTTP_HOST'],
-            'document_root'   => $_SERVER['DOCUMENT_ROOT'],
-            'server_os'       => PHP_OS,
-            'server_port'     => $_SERVER['SERVER_PORT'],
-            'server_soft'     => $_SERVER['SERVER_SOFTWARE'],
-            'php_version'     => PHP_VERSION,
-            'mysql_version'   => $version[0]['ver'],
-            'max_upload_size' => ini_get('upload_max_filesize')
+        $config = [
+            'url' => $request->server('http_host'),
+            'document_root' => $request->server('document_root'),
+            'server_os' => PHP_OS,
+            'server_port' => $request->server('server_port'),
+            'server_soft' => $request->server('server_software'),
+            'php_version' => PHP_VERSION,
+            'mysql_version' => Cache::remember('_DB', function () {
+                return Db::query("SELECT VERSION() as version")[0]['version'];
+            }, Config::get('cache.ttl', 60)),
+            'max_upload_size' => ini_get('upload_max_filesize'),
         ];
-
         return $this->fetch('index', ['config' => $config]);
     }
 }

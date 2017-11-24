@@ -2,7 +2,7 @@
 
 namespace app\common\model;
 
-use think\Model;
+use luoyy\Entrust\EntrustPermission;
 
 /**
  * This is the model class for table "os_auth_rule".
@@ -17,7 +17,14 @@ use think\Model;
  * @property integer $sort
  * @property string $condition
  */
-class AuthRule extends Model
+class AuthRule extends EntrustPermission
 {
-
+    /**
+     * 获取层级缩进列表数据
+     * @return array
+     */
+    public static function getLevelList()
+    {
+        return array2level(self::order(['sort' => 'DESC'])->select()->toArray());
+    }
 }

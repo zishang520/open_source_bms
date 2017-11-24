@@ -1,10 +1,10 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\model\SlideCategory as SlideCategoryModel;
-use app\common\model\Slide as SlideModel;
 use app\common\controller\AdminBaseController;
-use think\Db;
+use app\common\model\Slide;
+use app\common\model\SlideCategory;
+use think\Request;
 
 /**
  * 轮播图管理
@@ -13,23 +13,15 @@ use think\Db;
  */
 class SlideController extends AdminBaseController
 {
-
-    protected function _initialize()
-    {
-        parent::_initialize();
-    }
-
     /**
      * 轮播图管理
      * @return mixed
      */
     public function index()
     {
-        $slide_category_model = new SlideCategoryModel();
-        $slide_category_list  = $slide_category_model->column('name', 'id');
-        $slide_list           = SlideModel::all();
-
-        return $this->fetch('index', ['slide_list' => $slide_list, 'slide_category_list' => $slide_category_list]);
+        return view('slide/index')
+            ->assign('slide_list', Slide::paginate(15, false))
+            ->assign('slide_category_list', SlideCategory::field('`name`, `id`')->select());
     }
 
     /**
@@ -38,28 +30,26 @@ class SlideController extends AdminBaseController
      */
     public function add()
     {
-        $slide_category_list = SlideCategoryModel::all();
-
-        return $this->fetch('add', ['slide_category_list' => $slide_category_list]);
+        return view('slide/add')
+            ->assign('slide_category_list', SlideCategory::field('`name`, `id`')->select());
     }
 
     /**
      * 保存轮播图
      */
-    public function save()
+    public function save(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->param();
+        if ($request->isPost()) {
+            $data = $request->post();
             $validate_result = $this->validate($data, 'Slide');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
-                $slide_model = new SlideModel();
-                if ($slide_model->allowField(true)->save($data)) {
-                    $this->success('保存成功');
+                if ((new Slide)->allowField(true)->isUpdate(false)->save($data)) {
+                    return $this->success('保存成功');
                 } else {
-                    $this->error('保存失败');
+                    return $this->error('保存失败');
                 }
             }
         }
@@ -72,30 +62,32 @@ class SlideController extends AdminBaseController
      */
     public function edit($id)
     {
-        $slide_category_list = SlideCategoryModel::all();
-        $slide               = SlideModel::get($id);
-
-        return $this->fetch('edit', ['slide' => $slide, 'slide_category_list' => $slide_category_list]);
+        $slide = Slide::where(['id' => $id])->find();
+        if (empty($slide)) {
+            return $this->error('数据获取失败');
+        }
+        return view('slide/edit')
+            ->assign('slide', $slide)
+            ->assign('slide_category_list', SlideCategory::field('`name`, `id`')->select());
     }
 
     /**
      * 更新轮播图
      * @param $id
      */
-    public function update($id)
+    public function update(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->param();
-            $validate_result = $this->validate($data, 'Slide');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'SlideUpdate');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
-                $slide_model = new SlideModel();
-                if ($slide_model->allowField(true)->save($data, $id) !== false) {
-                    $this->success('更新成功');
+                if ((new Slide)->allowField(true)->isUpdate(true)->save($data, ['id' => $data['id']]) !== false) {
+                    return $this->success('更新成功');
                 } else {
-                    $this->error('更新失败');
+                    return $this->error('更新失败');
                 }
             }
         }
@@ -107,10 +99,10 @@ class SlideController extends AdminBaseController
      */
     public function delete($id)
     {
-        if (SlideModel::destroy($id)) {
-            $this->success('删除成功');
+        if (Slide::destroy($id)) {
+            return $this->success('删除成功');
         } else {
-            $this->error('删除失败');
+            return $this->error('删除失败');
         }
     }
 }

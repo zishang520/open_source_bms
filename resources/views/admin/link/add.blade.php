@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -20,7 +20,7 @@
                         <label class="layui-form-label">图片</label>
                         <div class="layui-input-block">
                             <input type="text" name="image" value="" placeholder="（选填）请上传图片" class="layui-input layui-input-inline" id="thumb">
-                            <input type="file" name="file" class="layui-upload-file">
+                            <input type="file" name="file" class="layui-upload-image">
                         </div>
                     </div>
                     <div class="layui-form-item">

@@ -1,7 +1,6 @@
 <?php
 namespace app\common\model;
 
-use think\Db;
 use think\Model;
 
 class ArticleCategory extends Model
@@ -15,7 +14,7 @@ class ArticleCategory extends Model
         self::event('after_insert', function ($category) {
             $pid = $category->pid;
             if ($pid > 0) {
-                $parent         = self::get($pid);
+                $parent = self::get($pid);
                 $category->path = $parent->path . $pid . ',';
             } else {
                 $category->path = 0 . ',';
@@ -25,14 +24,14 @@ class ArticleCategory extends Model
         });
 
         self::event('after_update', function ($category) {
-            $id   = $category->id;
-            $pid  = $category->pid;
+            $id = $category->id;
+            $pid = $category->pid;
             $data = [];
 
             if ($pid == 0) {
                 $data['path'] = 0 . ',';
             } else {
-                $parent       = self::get($pid);
+                $parent = self::get($pid);
                 $data['path'] = $parent->path . $pid . ',';
             }
 
@@ -69,10 +68,8 @@ class ArticleCategory extends Model
      * 获取层级缩进列表数据
      * @return array
      */
-    public function getLevelList()
+    public static function getLevelList()
     {
-        $category_level = $this->order(['sort' => 'DESC'])->select();
-
-        return array2level($category_level);
+        return array2level(self::order(['sort' => 'DESC'])->select()->toArray());
     }
 }

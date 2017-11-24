@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -38,11 +38,9 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">所属权限组</label>
                         <div class="layui-input-block">
-                            <select name="group_id" lay-verify="required">
-                                @foreach($auth_group_list as $vo)
-                                <option value="{{ $vo['id'] }}">{{ $vo['title'] }}</option>
-                                @endforeach
-                            </select>
+                            @foreach($auth_group_list as $vo)
+                            <input type="checkbox" name="group_id[]" value="{{ $vo['id'] }}" title="{{ $vo['title'] }}">
+                            @endforeach
                         </div>
                     </div>
                     <div class="layui-form-item">

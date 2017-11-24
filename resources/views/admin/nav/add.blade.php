@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -16,7 +16,7 @@
                             <select name="pid" required lay-verify="required">
                                 <option value="0">一级导航</option>
                                 @foreach($nav_level_list as $vo)
-                                <option value="{{ $vo['id'] }}" @if($pid==$vo['id']) selected="selected"@endif>{neq name="vo.level" value="1"}|{php}for($i=1;$i<$vo['level'];$i++){echo ' ----';}{/php}{/neq} {{ $vo['name'] }}</option>
+                                <option value="{{ $vo['id'] }}" @if($pid==$vo['id']) selected="selected"@endif>{{ $vo['level'] != 1 ? '|' . str_repeat(' ----', $vo['level'] - 1) : '' }} {{ $vo['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>

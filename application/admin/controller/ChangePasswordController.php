@@ -2,9 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\controller\AdminBaseController;
-use app\common\model\AdminUser as AdminUserModel;
-use think\Config;
-use think\Db;
+use think\Request;
 use think\Session;
 
 /**
@@ -20,36 +18,32 @@ class ChangePasswordController extends AdminBaseController
      */
     public function index()
     {
-        return $this->fetch('system/change_password');
+        return view('system/change_password');
     }
 
     /**
      * 更新密码
      */
-    public function updatePassword()
+    public function update_password(Request $request)
     {
-        if ($this->request->isPost()) {
-            $admin_id    = Session::get('admin_id');
-            $data   = $this->request->param();
-            /*@ver $user AdminUserModel*/
-
-            $user = AdminUserModel::get($admin_id);
-
-
-            if ($user->verifyPassword($data['old_password'])) {
-                if ($data['password'] == $data['confirm_password']) {
-                    $user->password = $data['password'];
-                    $res          = $user->save();
-                    if ($res !== false) {
-                        $this->success('修改成功');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'UpdatePassword');
+            if ($validate_result !== true) {
+                return $this->error($validate_result);
+            } else {
+                if (self::$admin_user->verifyPassword($data['old_password'])) {
+                    self::$admin_user->password = $data['password'];
+                    if (self::$admin_user->isUpdate(true)->save() !== false) {
+                        Session::delete('admin_id');
+                        Session::delete('admin_name');
+                        return $this->success('修改成功', '/admin/Login/index');
                     } else {
-                        $this->error('修改失败');
+                        return $this->error('修改失败');
                     }
                 } else {
-                    $this->error('两次密码输入不一致');
+                    return $this->error('原密码不正确');
                 }
-            } else {
-                $this->error('原密码不正确');
             }
         }
     }

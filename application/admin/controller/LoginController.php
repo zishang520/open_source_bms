@@ -1,12 +1,10 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\model\AdminUser;
-use think\Config;
-use think\Controller;
-use think\Db;
-use think\Session;
 use app\common\model\AdminUser as AdminUserModel;
+use think\Controller;
+use think\Request;
+use think\Session;
 
 /**
  * 后台登录
@@ -21,50 +19,38 @@ class LoginController extends Controller
      */
     public function index()
     {
-        return $this->fetch();
+        return view('login/index');
     }
 
     /**
      * 登录验证
      * @return string
      */
-    public function login()
+    public function login(Request $request)
     {
-        if ($this->request->isPost()) {
-            $data            = $this->request->only(['username', 'password', 'verify']);
+        if ($request->isPost()) {
+            $data = $request->only(['username', 'password', 'verify']);
             $validate_result = $this->validate($data, 'Login');
-
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
-                $adminUser = AdminUserModel::get(['username'=>$data['username']]);
-                if (!empty($adminUser)  && $adminUser->verifyPassword($data['password'])) {
+                $adminUser = AdminUserModel::get(['username' => $data['username']]);
+                if (!empty($adminUser) && $adminUser->verifyPassword($data['password'])) {
                     if ($adminUser->status != 1) {
-                        $this->error('当前用户已禁用');
+                        return $this->error('当前用户已禁用');
                     } else {
                         Session::set('admin_id', $adminUser['id']);
                         Session::set('admin_name', $adminUser['username']);
-                        $adminUser->last_login_ip = $this->request->ip();
+                        $adminUser->last_login_ip = $request->ip();
                         $adminUser->last_login_time = date('Y-m-d H:i:s');
                         $adminUser->save();
-                        $this->success('登录成功', 'admin/index/index');
+                        return $this->success('登录成功', 'admin/index/index');
                     }
                 } else {
-                    $this->error('用户名或密码错误');
+                    return $this->error('用户名或密码错误');
                 }
             }
         }
-    }
-
-    /**
-     * 设置管理员密码
-     */
-    public function reset()
-    {
-        $model = new AdminUser();
-        $admin = $model->find(1);
-        $admin->password = 'admin';
-        var_dump($admin->save());
     }
 
     /**
@@ -74,6 +60,18 @@ class LoginController extends Controller
     {
         Session::delete('admin_id');
         Session::delete('admin_name');
-        $this->success('退出成功', 'admin/login/index');
+        return $this->success('退出成功', '/admin/Login/index');
+    }
+
+    /**
+     * [_empty 空方法]
+     * @Author    ZiShang520@gmail.com
+     * @DateTime  2017-11-18T17:45:32+0800
+     * @copyright (c)                      ZiShang520    All Rights Reserved
+     * @return    [type]                   [description]
+     */
+    public function _empty()
+    {
+        return $this->error('访问的页面不存在');
     }
 }

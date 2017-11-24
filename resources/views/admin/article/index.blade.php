@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -16,7 +16,7 @@
                         <select name="cid">
                             <option value="0">全部</option>
                             @foreach($category_level_list as $vo)
-                            <option value="{{ $vo['id'] }}" @if($cid==$vo['id']) selected="selected"@endif>{neq name="vo.level" value="1"}|{php}for($i=1;$i<$vo['level'];$i++){echo ' ----';}{/php}{/neq} {{ $vo['name'] }}</option>
+                            <option value="{{ $vo['id'] }}" @if($search['cid']==$vo['id']) selected="selected"@endif>{{ $vo['level'] != 1 ? '|' . str_repeat(' ----', $vo['level'] - 1) : '' }} {{ $vo['name'] }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -24,7 +24,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">关键词</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="keyword" value="{{ $keyword }}" placeholder="请输入关键词" class="layui-input">
+                        <input type="text" name="keyword" value="{{ $search['keyword'] }}" placeholder="请输入关键词" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -39,11 +39,18 @@
                 <button type="button" class="layui-btn layui-btn-danger layui-btn-small ajax-action" data-action="{{ url('admin/article/delete') }}">删除</button>
                 <div class="layui-tab-item layui-show">
                     <table class="layui-table">
+                        <colgroup>
+                            <col width="15">
+                            <col width="100">
+                            <col>
+                        </colgroup>
                         <thead>
                         <tr>
-                            <th style="width: 15px;"><input type="checkbox" class="check-all"></th>
-                            <th style="width: 30px;">ID</th>
-                            <th style="width: 30px;">排序</th>
+                            <th>
+                                <input type="checkbox" class="check-all" name="" lay-skin="primary" lay-filter="allChoose">
+                            </th>
+                            <th>ID</th>
+                            <th>排序</th>
                             <th>标题</th>
                             <th>栏目</th>
                             <th>作者</th>
@@ -56,11 +63,13 @@
                         <tbody>
                         @foreach($article_list as $vo)
                         <tr>
-                            <td><input type="checkbox" name="ids[]" value="{{ $vo['id'] }}"></td>
+                            <td>
+                                <input type="checkbox" name="ids[]" value="{{ $vo['id'] }}" lay-skin="primary">
+                            </td>
                             <td>{{ $vo['id'] }}</td>
                             <td>{{ $vo['sort'] }}</td>
                             <td>{{ $vo['title'] }}</td>
-                            <td>{$category_list[$vo['cid']]}</td>
+                            <td>{{ $vo['category']['name'] }}</td>
                             <td>{{ $vo['author'] }}</td>
                             <td>{{ $vo['reading'] }}</td>
                             <td>{{ $vo['status']==1 ? '已审核' : '未审核' }}</td>

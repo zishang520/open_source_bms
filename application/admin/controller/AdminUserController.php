@@ -1,12 +1,10 @@
 <?php
 namespace app\admin\controller;
 
+use app\common\controller\AdminBaseController;
 use app\common\model\AdminUser;
 use app\common\model\AuthGroup;
-use app\common\model\AuthGroupAccess;
-use app\common\controller\AdminBaseController;
-use think\Config;
-use think\Db;
+use think\Request;
 
 /**
  * 管理员管理
@@ -21,8 +19,8 @@ class AdminUserController extends AdminBaseController
      */
     public function index()
     {
-        $admin_user_list = AdminUser::all();
-        return $this->fetch('index', ['admin_user_list' => $admin_user_list]);
+        return view('admin_user/index')
+            ->assign('admin_user_list', AdminUser::paginate(15, false));
     }
 
     /**
@@ -31,33 +29,29 @@ class AdminUserController extends AdminBaseController
      */
     public function add()
     {
-        $auth_group_list = AuthGroup::all();
-        return $this->fetch('add', ['auth_group_list' => $auth_group_list]);
+        return view('admin_user/add')
+            ->assign('auth_group_list', AuthGroup::all());
     }
 
     /**
      * 保存管理员
      * @param $group_id
      */
-    public function save($group_id)
+    public function save(Request $request)
     {
-        $adminUserModel = new AdminUser();
-        $authGroupAccessModel = new AuthGroupAccess();
-        if ($this->request->isPost()) {
-            $data            = $this->request->param();
-            $validate_result = $this->validate($data, 'AdminUser');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'AdminUserAdd');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
-                $data['password'] = $adminUserModel->encrypt($data['password']);
-                if ( $adminUserModel->allowField(true)->save($data)) {
-                    $auth_group_access['uid']      = $adminUserModel->id;
-                    $auth_group_access['group_id'] = $group_id;
-                    $authGroupAccessModel->save($auth_group_access);
-                    $this->success('保存成功');
+                $adminUserModel = new AdminUser();
+                if ($adminUserModel->allowField(true)->save($data) !== false) {
+                    $adminUserModel->saveRole($data['group_id']);
+                    return $this->success('保存成功');
                 } else {
-                    $this->error('保存失败');
+                    return $this->error('保存失败');
                 }
             }
         }
@@ -70,10 +64,14 @@ class AdminUserController extends AdminBaseController
      */
     public function edit($id)
     {
-        $model = new AdminUser();
-        $admin_user             = $model->where(['id'=>$id])->find();
-        $auth_group_list        = AuthGroup::all();
-        return $this->fetch('edit', ['admin_user' => $admin_user, 'auth_group_list' => $auth_group_list]);
+        $admin_user = AdminUser::where(['id' => $id])->find();
+        $auth_group_list = AuthGroup::all();
+        return view('admin_user/edit')
+            ->assign('admin_user', $admin_user)
+            ->assign('has_roles', array_map(function ($value) {
+                return $value['id'];
+            }, $admin_user->roles->toArray()))
+            ->assign('roles', AuthGroup::all());
     }
 
     /**
@@ -81,29 +79,29 @@ class AdminUserController extends AdminBaseController
      * @param $id
      * @param $group_id
      */
-    public function update($id, $group_id)
+    public function update(Request $request)
     {
-        $adminUserModel = new AdminUser();
-        if ($this->request->isPost()) {
-            $data            = $this->request->param();
-            $validate_result = $this->validate($data, 'AdminUser');
+        if ($request->isPost()) {
+            $data = $request->post();
+            $validate_result = $this->validate($data, 'AdminUserUpdate');
 
             if ($validate_result !== true) {
-                $this->error($validate_result);
+                return $this->error($validate_result);
             } else {
-                $admin_user = $adminUserModel->find($id);
+                $admin_user = AdminUser::where(['id' => $data['id']])->find();
+                if (empty($admin_user)) {
+                    return $this->error('用户信息获取失败');
+                }
                 $admin_user->username = $data['username'];
-                $admin_user->status   = $data['status'];
+                $admin_user->status = $data['status'];
                 if (!empty($data['password']) && !empty($data['confirm_password'])) {
                     $admin_user->password = $data['password'];
                 }
-                if ($admin_user->save() !== false) {
-                    $auth_group_access['group_id'] = $group_id;
-                    $admin_user->authGroupAccess->group_id = $group_id;
-                    $admin_user->authGroupAccess->save();
-                    $this->success('更新成功');
+                if ($admin_user->isUpdate(true)->save() !== false) {
+                    $admin_user->saveRole($data['group_id']);
+                    return $this->success('更新成功');
                 } else {
-                    $this->error('更新失败');
+                    return $this->error('更新失败');
                 }
             }
         }
@@ -116,13 +114,17 @@ class AdminUserController extends AdminBaseController
     public function delete($id)
     {
         if ($id == 1) {
-            $this->error('默认管理员不可删除');
+            return $this->error('默认管理员不可删除');
         }
-        if ($this->adminUserModel->destroy($id)) {
-            $this->authGroupAccessModel->where('uid', $id)->delete();
-            $this->success('删除成功');
+        $admin_user = $this->admin_user_model->where(['id' => $id])->find();
+        if (empty($admin_user)) {
+            return $this->error('管理员信息获取失败');
+        }
+        if ($admin_user->delete()) {
+            $admin_user->detachRoles();
+            return $this->success('删除成功');
         } else {
-            $this->error('删除失败');
+            return $this->error('删除失败');
         }
     }
 }

@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -10,9 +10,14 @@
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
                 <table class="layui-table">
+                    <colgroup>
+                        <col width="15">
+                        <col width="100">
+                        <col>
+                    </colgroup>
                     <thead>
                     <tr>
-                        <th style="width: 30px;">ID</th>
+                        <th>ID</th>
                         <th>用户名</th>
                         <th>状态</th>
                         <th>创建时间</th>
@@ -38,6 +43,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                {!! $admin_user_list->render() !!}
             </div>
         </div>
     </div>

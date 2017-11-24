@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts/admin')
 @section('body')
 <div class="layui-body">
     <!--tab标签-->
@@ -39,16 +39,14 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">所属权限组</label>
                         <div class="layui-input-block">
-                            <select name="group_id" lay-verify="required">
-                                @foreach($auth_group_list as $vo)
-                                <option value="{{ $vo['id'] }}" @if($admin_user['group_id']==$vo['id']) selected="selected"@endif>{{ $vo['title'] }}</option>
-                                @endforeach
-                            </select>
+                            @foreach($roles as $vo)
+                            <input type="checkbox" name="group_id[]" value="{{ $vo['id'] }}" title="{{ $vo['title'] }}" @if(in_array($vo['id'], $has_roles)) checked="checked"@endif>
+                            @endforeach
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-input-block">
-                            <input type="hidden" name="id" value="{{ $admin_user['id'] }}">
+                            <input type="hidden" name="id" value="{{ $admin_user['id'] }}" >
                             <button class="layui-btn" lay-submit lay-filter="*">更新</button>
                             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                         </div>
