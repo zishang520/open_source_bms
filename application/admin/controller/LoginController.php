@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\model\AdminUser as AdminUserModel;
+use app\common\model\AdminUser;
 use think\Controller;
 use think\Request;
 use think\Session;
@@ -34,7 +34,7 @@ class LoginController extends Controller
             if ($validate_result !== true) {
                 return $this->error($validate_result);
             } else {
-                $adminUser = AdminUserModel::get(['username' => $data['username']]);
+                $adminUser = AdminUser::get(['username' => $data['username']]);
                 if (!empty($adminUser) && $adminUser->verifyPassword($data['password'])) {
                     if ($adminUser->status != 1) {
                         return $this->error('当前用户已禁用');

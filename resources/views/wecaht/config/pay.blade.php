@@ -58,7 +58,7 @@
  * 通用单图上传
  */
 layui.upload({
-    url: "{{ url('api/upload/cert') }}",
+    url: "{{ url('admin/upload/cert') }}",
     type: 'file',
     elem: '.upload-file-key',
     success: function(data) {
@@ -70,7 +70,7 @@ layui.upload({
     }
 });
 layui.upload({
-    url: "{{ url('api/upload/cert') }}",
+    url: "{{ url('admin/upload/cert') }}",
     type: 'file',
     elem: '.upload-file-cert',
     success: function(data) {

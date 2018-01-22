@@ -1,5 +1,6 @@
 <?php
 
+use app\common\model\AdminUser;
 use think\migration\db\Column;
 use think\migration\Migrator;
 
@@ -31,6 +32,7 @@ class Init extends Migrator
     {
         $sql = file_get_contents(ROOT_PATH . '/open_source_bms.sql');
         $this->execute($sql);
+        (new AdminUser)->isUpdate(true)->save(['password' => 'admin'], ['username' => 'admin']);
     }
     public function down()
     {

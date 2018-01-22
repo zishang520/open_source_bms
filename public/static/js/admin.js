@@ -26,7 +26,7 @@ $('.layui-nav-tree').find('a[href*="' + GV.current_controller + '"]').parent().a
  * 通用单图上传
  */
 layui.upload({
-    url: "/index.php/api/upload/upload",
+    url: "/admin/upload/upload",
     type: 'image',
     elem: '.layui-upload-image',
     ext: 'jpg|png|gif|bmp',

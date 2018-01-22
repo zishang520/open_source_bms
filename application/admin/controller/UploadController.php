@@ -1,5 +1,5 @@
 <?php
-namespace app\api\controller;
+namespace app\admin\controller;
 
 use app\common\model\UploadImages;
 use think\Controller;
@@ -9,7 +9,7 @@ use think\Session;
 /**
  * 通用上传接口
  * Class Upload
- * @package app\api\controller
+ * @package app\admin\controller
  */
 class UploadController extends Controller
 {
