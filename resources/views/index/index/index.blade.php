@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Open Source BMS</title>
     <meta name="description" content="Open Source BMS，全称Open Source Background System，基于ThinkPHP5开发的开源后台管理系统">
-    <link rel="stylesheet" href="__JS__/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/js/layui/css/layui.css">
     <style>
         .header {
             width: 100%;
             height: 400px;
-            background: url(__STATIC__/images/login-bg.png) #56bc94;
+            background: url(/static/images/login-bg.png) #56bc94;
             text-align: center;
         }
 
@@ -147,7 +147,7 @@
     <p>2016-2017 © opensourcebms.com</p>
 </div>
 
-<script src="__JS__/layui/lay/dest/layui.all.js"></script>
+<script src="/static/js/layui/lay/dest/layui.all.js"></script>
 <script>
     var element = layui.element();
 </script>

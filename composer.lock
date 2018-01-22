@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1328e543ffd5ef9c35911cf2b3775b5e",
-    "content-hash": "ee887a6ec83d542cb14a62ccbc063e8b",
+    "hash": "ed22ea45738c76042c0d879b2c2c93ba",
+    "content-hash": "c9c7584b88ad516d99f8ae89df12b69c",
     "packages": [
         {
             "name": "luoyy/blade",
@@ -89,16 +89,16 @@
         },
         {
             "name": "topthink/framework",
-            "version": "v5.0.12",
+            "version": "v5.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "0fb51680e8d62495d27f17a0e6cf889b763a6d3c"
+                "reference": "3d1bdfbc19a7e7fd323be1dd53c4bacbe7bfb706"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/framework/0fb51680e8d62495d27f17a0e6cf889b763a6d3c.zip",
-                "reference": "0fb51680e8d62495d27f17a0e6cf889b763a6d3c",
+                "url": "https://files.phpcomposer.com/files/top-think/framework/3d1bdfbc19a7e7fd323be1dd53c4bacbe7bfb706.zip",
+                "reference": "3d1bdfbc19a7e7fd323be1dd53c4bacbe7bfb706",
                 "shasum": ""
             },
             "require": {
@@ -136,7 +136,7 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2017-11-06 01:19:03"
+            "time": "2018-01-01 12:44:11"
         },
         {
             "name": "topthink/think-captcha",
