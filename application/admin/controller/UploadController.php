@@ -3,8 +3,9 @@ namespace app\admin\controller;
 
 use app\common\model\UploadImages;
 use think\Controller;
+use think\facade\Env;
 use think\Request;
-use think\Session;
+use think\facade\Session;
 
 /**
  * 通用上传接口
@@ -13,9 +14,9 @@ use think\Session;
  */
 class UploadController extends Controller
 {
-    protected function _initialize()
+    protected function initialize()
     {
-        parent::_initialize();
+        parent::initialize();
         if (!Session::has('admin_id')) {
             $result = [
                 'error' => 1,
@@ -56,7 +57,7 @@ class UploadController extends Controller
                 'message' => $file->getError(),
             ]);
         }
-        $upload_path = str_replace(DS, '/', ROOT_PATH . 'public/uploads');
+        $upload_path = str_replace(DIRECTORY_SEPARATOR, '/', Env::get('root_path') . 'public/uploads');
         $save_path = '/uploads/';
         $upload = new UploadImages();
         $info = $upload->upload($file, $upload_path, $save_path);

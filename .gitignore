@@ -1,7 +1,4 @@
 .idea
+composer.lock
 *.log
-runtime/
-vendor/
 thinkphp
-.env
-public/uploads/

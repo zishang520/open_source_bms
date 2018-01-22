@@ -2,15 +2,12 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-
-use think\Collection;
-use think\Env;
 
 return [
     // 数据库类型
@@ -30,11 +27,11 @@ return [
     // 数据库连接参数
     'params' => [],
     // 数据库编码默认采用utf8
-    'charset' => 'utf8mb4',
+    'charset' => Env::get('DB_CHARSET', 'utf8mb4'),
     // 数据库表前缀
     'prefix' => Env::get('DB_PREFIX', 'os_'),
     // 数据库调试模式
-    'debug' => true,
+    'debug' => Env::get('DB_DEBUG', false),
     // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)
     'deploy' => 0,
     // 数据库读写是否分离 主从式有效
@@ -45,12 +42,14 @@ return [
     'slave_no' => '',
     // 是否严格检查字段是否存在
     'fields_strict' => true,
-    // 数据集返回类型 array 数组 collection Collection对象
-    'resultset_type' => Collection::class,
-    // 是否自动写入时间戳字段
+    // 数据集返回类型
+    'resultset_type' => \think\Collection::class,
+    // 自动写入时间戳字段
     'auto_timestamp' => false,
     // 时间字段取出后的默认时间格式
-    'datetime_format' => false,
+    'datetime_format' => 'Y-m-d H:i:s',
     // 是否需要进行SQL性能分析
     'sql_explain' => false,
+    // Query类
+    'query' => \think\db\Query::class,
 ];

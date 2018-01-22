@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <title>Open Source BMS</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="__JS__/layui/css/layui.css">
-    <link rel="stylesheet" href="__CSS__/admin.css">
+    <link rel="stylesheet" href="/static/js/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
     <!--[if lt IE 9]>
-    <script src="__JS__/html5shiv.min.js"></script>
-    <script src="__JS__/respond.min.js"></script>
+    <script src="/static/js/html5shiv.min.js"></script>
+    <script src="/static/js/respond.min.js"></script>
     <style>
         .login .login-form input {color: #000;}
     </style>
@@ -48,8 +48,8 @@
         current_controller: "admin/{{ isset($controller)?$controller:'' }}/"
     };
 </script>
-<script src="__JS__/jquery.min.js"></script>
-<script src="__JS__/layui/lay/dest/layui.all.js"></script>
-<script src="__JS__/admin.js"></script>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/layui/lay/dest/layui.all.js"></script>
+<script src="/static/js/admin.js"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@ namespace luoyy\Entrust\Traits;
  * @package luoyy\Entrust
  */
 
-use think\Config;
+use think\facade\Config;
 
 trait EntrustPermissionTrait
 {

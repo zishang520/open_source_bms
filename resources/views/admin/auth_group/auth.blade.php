@@ -1,6 +1,6 @@
 @extends('layouts/admin')
 @section('css')
-<link rel="stylesheet" href="__CSS__/ztree-metro-style.css">
+<link rel="stylesheet" href="/static/css/ztree-metro-style.css">
 @endsection
 @section('body')
 <div class="layui-body">
@@ -22,7 +22,7 @@
 </div>
 @endsection
 @section('js')
-<script src="__JS__/jquery.ztree.all.min.js"></script>
+<script src="/static/js/jquery.ztree.all.min.js"></script>
 @endsection
 @section('script')
 <script>

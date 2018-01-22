@@ -4,7 +4,8 @@ namespace app\admin\controller;
 use luoyy\JSObject\JSON;
 use org\UeditorUpload;
 use think\Controller;
-use think\Session;
+use think\facade\Env;
+use think\facade\Session;
 
 /**
  * Ueditor编辑器统一上传接口
@@ -16,9 +17,9 @@ class UeditorController extends Controller
     protected $config;
     protected $action;
 
-    protected function _initialize()
+    protected function initialize()
     {
-        parent::_initialize();
+        parent::initialize();
 
         if (!Session::get('admin_id')) {
             $result = [
@@ -27,7 +28,7 @@ class UeditorController extends Controller
             return abort(json($result));
         }
 
-        $this->config = JSON::decode(file_get_contents(ROOT_PATH . 'public/static/js/ueditor/config.json'), true);
+        $this->config = JSON::decode(file_get_contents(Env::get('root_path') . 'public/static/js/ueditor/config.json'), true);
         $this->action = $this->request->get('action');
     }
 

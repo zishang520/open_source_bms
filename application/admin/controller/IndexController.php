@@ -2,9 +2,9 @@
 namespace app\admin\controller;
 
 use app\common\controller\AdminBaseController;
-use think\Cache;
-use think\Config;
 use think\Db;
+use think\facade\Cache;
+use think\facade\Config;
 use think\Request;
 
 /**

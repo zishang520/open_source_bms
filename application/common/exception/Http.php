@@ -2,9 +2,9 @@
 namespace app\common\exception;
 
 use Exception;
-use think\App;
 use think\exception\Handle;
-use think\Request;
+use think\facade\App;
+use think\facade\Request;
 
 class Http extends Handle
 {
@@ -18,11 +18,11 @@ class Http extends Handle
      */
     public function render(Exception $exception)
     {
-        if (Request::instance()->module() == 'api') {
+        if (Request::module() == 'api') {
             return json([
                 'code' => -2,
                 'msg' => '服务器内部故障',
-                'data' => App::$debug ? [
+                'data' => App::isDebug() ? [
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
                     'message' => $this->getMessage($exception),

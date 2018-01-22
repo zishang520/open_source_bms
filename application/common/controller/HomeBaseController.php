@@ -4,15 +4,15 @@ namespace app\common\controller;
 use app\common\model\Nav;
 use app\common\model\Slide;
 use app\common\model\System;
-use think\Cache;
 use think\Controller;
+use think\facade\Cache;
 
 class HomeBaseController extends Controller
 {
 
-    protected function _initialize()
+    protected function initialize()
     {
-        parent::_initialize();
+        parent::initialize();
         $this->getSystem();
         $this->getNav();
         $this->getSlide();

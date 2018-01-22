@@ -4,7 +4,7 @@ namespace app\admin\controller;
 use app\common\model\AdminUser;
 use think\Controller;
 use think\Request;
-use think\Session;
+use think\facade\Session;
 
 /**
  * 后台登录

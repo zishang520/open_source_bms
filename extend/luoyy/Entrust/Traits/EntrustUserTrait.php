@@ -11,8 +11,8 @@ namespace luoyy\Entrust\Traits;
  */
 
 use InvalidArgumentException;
-use think\Cache;
-use think\Config;
+use think\facade\Cache;
+use think\facade\Config;
 
 trait EntrustUserTrait
 {
@@ -25,8 +25,9 @@ trait EntrustUserTrait
     {
         $userPrimaryKey = $this->getPk();
         $cacheKey = 'entrust_roles_for_user_' . $this->$userPrimaryKey;
-        return Cache::tag(Config::get('entrust.role_user_table'))->remember($cacheKey, function () {
-            return $this->roles()->select();
+        $self = &$this;
+        return Cache::tag(Config::get('entrust.role_user_table'))->remember($cacheKey, function () use (&$self) {
+            return $self->roles()->select();
         }, Config::get('cache.ttl', 60));
     }
 

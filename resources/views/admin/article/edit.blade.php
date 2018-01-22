@@ -115,8 +115,8 @@
 </div>
 @endsection
 @section('js')
-<script src="__JS__/ueditor/ueditor.config.js"></script>
-<script src="__JS__/ueditor/ueditor.all.min.js"></script>
+<script src="/static/js/ueditor/ueditor.config.js"></script>
+<script src="/static/js/ueditor/ueditor.all.min.js"></script>
 @endsection
 @section('script')
 <script>

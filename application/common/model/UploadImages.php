@@ -26,7 +26,7 @@ class UploadImages extends Model
      */
     public static function upload($file, $uploadPath, $savePath)
     {
-        $md5 = static::hash($file->getPath() . DS . $file->getFilename());
+        $md5 = static::hash($file->getPath() . DIRECTORY_SEPARATOR . $file->getFilename());
         /**
          * @var UploadImages $fileData
          */
@@ -42,7 +42,7 @@ class UploadImages extends Model
             $fileData->file_name = $info->getFilename();
             $fileData->file_type = $info->getMime();
             $fileData->hash = $md5;
-            $fileData->url = str_replace(DS, '/', $savePath . $info->getSaveName());
+            $fileData->url = str_replace(DIRECTORY_SEPARATOR, '/', $savePath . $info->getSaveName());
             $fileData->path = $info->getPath();
             $fileData->size = $info->getSize();
             if (!$fileData->save()) {
@@ -50,7 +50,7 @@ class UploadImages extends Model
                 return false;
             }
         } else {
-            if (!file_exists($fileData->path . DS . $fileData->file_name)) {
+            if (!file_exists($fileData->path . DIRECTORY_SEPARATOR . $fileData->file_name)) {
                 $file->move($fileData->path, $fileData->file_name);
             }
         }

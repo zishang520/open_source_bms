@@ -3,7 +3,7 @@ namespace app\admin\controller;
 
 use app\common\controller\AdminBaseController;
 use think\Request;
-use think\Session;
+use think\facade\Session;
 
 /**
  * 修改密码

@@ -2,7 +2,7 @@
 namespace app\common\model;
 
 use org\PasswordHash;
-use think\Config;
+use think\facade\Config;
 use think\Model;
 
 class User extends Model

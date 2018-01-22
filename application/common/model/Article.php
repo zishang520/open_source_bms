@@ -2,8 +2,8 @@
 namespace app\common\model;
 
 use app\common\model\ArticleCategory;
+use think\facade\Session;
 use think\Model;
-use think\Session;
 
 class Article extends Model
 {

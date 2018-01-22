@@ -10,10 +10,10 @@ namespace luoyy\Entrust;
  * @package luoyy\Entrust
  */
 
-use think\Model;
-use think\Config;
 use luoyy\Entrust\Contracts\EntrustRoleInterface;
 use luoyy\Entrust\Traits\EntrustRoleTrait;
+use think\facade\Config;
+use think\Model;
 
 class EntrustRole extends Model implements EntrustRoleInterface
 {

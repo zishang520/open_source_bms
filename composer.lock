@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1328e543ffd5ef9c35911cf2b3775b5e",
-    "content-hash": "ee887a6ec83d542cb14a62ccbc063e8b",
+    "hash": "40bd522cebc1e8cf4868914a21088985",
+    "content-hash": "d978691686cbeb1eff4e4904897b9d53",
     "packages": [
         {
             "name": "luoyy/blade",
@@ -89,20 +89,20 @@
         },
         {
             "name": "topthink/framework",
-            "version": "v5.0.12",
+            "version": "v5.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "0fb51680e8d62495d27f17a0e6cf889b763a6d3c"
+                "reference": "57026de4c60ee300896124f32554de8ebb3cc921"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/framework/0fb51680e8d62495d27f17a0e6cf889b763a6d3c.zip",
-                "reference": "0fb51680e8d62495d27f17a0e6cf889b763a6d3c",
+                "url": "https://files.phpcomposer.com/files/top-think/framework/57026de4c60ee300896124f32554de8ebb3cc921.zip",
+                "reference": "57026de4c60ee300896124f32554de8ebb3cc921",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
+                "php": ">=5.6.0",
                 "topthink/think-installer": "~1.0"
             },
             "require-dev": {
@@ -110,15 +110,11 @@
                 "mikey179/vfsstream": "~1.6",
                 "phpdocumentor/reflection-docblock": "^2.0",
                 "phploc/phploc": "2.*",
-                "phpunit/phpunit": "4.8.*",
-                "sebastian/phpcpd": "2.*"
+                "phpunit/phpunit": "^5.0|^6.0",
+                "sebastian/phpcpd": "2.*",
+                "squizlabs/php_codesniffer": "2.*"
             },
             "type": "think-framework",
-            "autoload": {
-                "psr-4": {
-                    "think\\": "library/think"
-                }
-            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
@@ -127,6 +123,10 @@
                 {
                     "name": "liu21st",
                     "email": "liu21st@gmail.com"
+                },
+                {
+                    "name": "yunwuxin",
+                    "email": "448901948@qq.com"
                 }
             ],
             "description": "the new thinkphp framework",
@@ -136,21 +136,24 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2017-11-06 01:19:03"
+            "time": "2018-01-19 08:06:41"
         },
         {
             "name": "topthink/think-captcha",
-            "version": "v1.0.7",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-captcha.git",
-                "reference": "0c55455df26a1626a60d0dc35d2d89002b741d44"
+                "reference": "54c8a51552f99ff9ea89ea9c272383a8f738ceee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-captcha/0c55455df26a1626a60d0dc35d2d89002b741d44.zip",
-                "reference": "0c55455df26a1626a60d0dc35d2d89002b741d44",
+                "url": "https://files.phpcomposer.com/files/top-think/think-captcha/54c8a51552f99ff9ea89ea9c272383a8f738ceee.zip",
+                "reference": "54c8a51552f99ff9ea89ea9c272383a8f738ceee",
                 "shasum": ""
+            },
+            "require": {
+                "topthink/framework": "5.1.*"
             },
             "type": "library",
             "autoload": {
@@ -172,7 +175,7 @@
                 }
             ],
             "description": "captcha package for thinkphp5",
-            "time": "2016-07-06 01:47:11"
+            "time": "2017-12-31 16:37:49"
         },
         {
             "name": "topthink/think-installer",
@@ -217,20 +220,20 @@
         },
         {
             "name": "topthink/think-migration",
-            "version": "v1.1.1",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-migration.git",
-                "reference": "8e489f8d38a39876690c0e00fcf9a54ae92c4d3d"
+                "reference": "70c89850ca29c2eab988c7c3475d1d5331901bb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-migration/8e489f8d38a39876690c0e00fcf9a54ae92c4d3d.zip",
-                "reference": "8e489f8d38a39876690c0e00fcf9a54ae92c4d3d",
+                "url": "https://files.phpcomposer.com/files/top-think/think-migration/70c89850ca29c2eab988c7c3475d1d5331901bb8.zip",
+                "reference": "70c89850ca29c2eab988c7c3475d1d5331901bb8",
                 "shasum": ""
             },
-            "require-dev": {
-                "topthink/framework": "^5.0"
+            "require": {
+                "topthink/framework": "5.1.*"
             },
             "type": "library",
             "autoload": {
@@ -252,7 +255,7 @@
                     "email": "448901948@qq.com"
                 }
             ],
-            "time": "2017-03-31 06:33:23"
+            "time": "2017-12-31 16:32:22"
         }
     ],
     "packages-dev": [],
@@ -262,7 +265,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.4.0"
+        "php": ">=5.6.0"
     },
     "platform-dev": []
 }

@@ -6,7 +6,7 @@ use app\common\model\AuthGroup;
 use app\common\model\AuthGroupAccess;
 use luoyy\Entrust\Traits\EntrustUserTrait;
 use org\PasswordHash;
-use think\Config;
+use think\facade\Config;
 use think\Model;
 
 /**

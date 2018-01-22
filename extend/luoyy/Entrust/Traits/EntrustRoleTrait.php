@@ -10,8 +10,8 @@ namespace luoyy\Entrust\Traits;
  * @package luoyy\Entrust
  */
 
-use think\Cache;
-use think\Config;
+use think\facade\Cache;
+use think\facade\Config;
 
 trait EntrustRoleTrait
 {
@@ -20,8 +20,9 @@ trait EntrustRoleTrait
     {
         $rolePrimaryKey = $this->getPk();
         $cacheKey = 'entrust_permissions_for_role_' . $this->$rolePrimaryKey;
-        return Cache::tag(Config::get('entrust.permission_role_table'))->remember($cacheKey, function () {
-            return $this->perms()->select();
+        $self = &$this;
+        return Cache::tag(Config::get('entrust.permission_role_table'))->remember($cacheKey, function () use (&$self) {
+            return $self->perms()->select();
         }, Config::get('cache.ttl', 60));
     }
 

@@ -2,7 +2,7 @@
 
 namespace luoyy\Aes;
 
-use think\Env;
+use think\facade\Env;
 
 /**
  * AES/CBC/PKCS5Padding 加密解密.comuni app

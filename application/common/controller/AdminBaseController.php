@@ -4,9 +4,9 @@ namespace app\common\controller;
 use app\common\model\AdminUser;
 use app\common\model\AuthRule;
 use think\Controller;
+use think\facade\Session;
+use think\facade\View;
 use think\Loader;
-use think\Session;
-use think\View;
 
 /**
  * 后台公用基础控制器
@@ -18,9 +18,9 @@ class AdminBaseController extends Controller
 
     protected static $admin_user = null;
 
-    protected function _initialize()
+    protected function initialize()
     {
-        parent::_initialize();
+        parent::initialize();
 
         $this->checkAuth();
         $this->getMenu();
