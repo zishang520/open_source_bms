@@ -168,7 +168,6 @@ return [
             'cache_subdir' => false,
             'prefix' => '',
         ],
-        'tpl_replace_string' => [],
     ],
 
     // 手机模板开启

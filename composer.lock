@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ed22ea45738c76042c0d879b2c2c93ba",
-    "content-hash": "c9c7584b88ad516d99f8ae89df12b69c",
+    "hash": "82a355e4cdf7ce1c47627edd5475b642",
+    "content-hash": "3c7beb8f3d3f754c6fcecb06c504d690",
     "packages": [
         {
             "name": "luoyy/blade",
-            "version": "5.5.1",
+            "version": "5.5.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zishang520/blade.git",
-                "reference": "5fdac8a7ddd9b27168dfc856d2d5931c6e745720"
+                "reference": "dbe44f5868ef9df2f889c9f3fc5ef081e6f3da22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/zishang520/blade/5fdac8a7ddd9b27168dfc856d2d5931c6e745720.zip",
-                "reference": "5fdac8a7ddd9b27168dfc856d2d5931c6e745720",
+                "url": "https://files.phpcomposer.com/files/zishang520/blade/dbe44f5868ef9df2f889c9f3fc5ef081e6f3da22.zip",
+                "reference": "dbe44f5868ef9df2f889c9f3fc5ef081e6f3da22",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=7.0.0"
             },
             "type": "library",
             "autoload": {
@@ -45,20 +45,20 @@
             ],
             "description": "an independent version of laravel view template - blade",
             "homepage": "http://www.luoyy.com",
-            "time": "2017-11-08 06:10:37"
+            "time": "2018-01-23 04:45:20"
         },
         {
             "name": "luoyy/think-blade",
-            "version": "2.0.2",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zishang520/think-blade.git",
-                "reference": "f77b48bfe15739803e860f350ccaaaebfbee2ba2"
+                "reference": "4200c371982d5af62d741ff8c4da89c4662bb00c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/zishang520/think-blade/f77b48bfe15739803e860f350ccaaaebfbee2ba2.zip",
-                "reference": "f77b48bfe15739803e860f350ccaaaebfbee2ba2",
+                "url": "https://files.phpcomposer.com/files/zishang520/think-blade/4200c371982d5af62d741ff8c4da89c4662bb00c.zip",
+                "reference": "4200c371982d5af62d741ff8c4da89c4662bb00c",
                 "shasum": ""
             },
             "require": {
@@ -75,7 +75,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Apache2"
+                "Apache-2.0"
             ],
             "authors": [
                 {
@@ -85,7 +85,7 @@
             ],
             "description": "think blade view engine",
             "homepage": "http://www.luoyy.com",
-            "time": "2017-11-08 07:07:01"
+            "time": "2018-01-23 05:40:46"
         },
         {
             "name": "topthink/framework",
