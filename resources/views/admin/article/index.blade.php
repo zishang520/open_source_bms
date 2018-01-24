@@ -33,7 +33,7 @@
             </form>
             <hr>
 
-            <form action="" method="post" class="ajax-form">
+            <form action="" method="post" class="ajax-form layui-form">
                 <button type="button" class="layui-btn layui-btn-small ajax-action" data-action="{{ url('admin/article/toggle',['type'=>'audit']) }}">审核</button>
                 <button type="button" class="layui-btn layui-btn-warm layui-btn-small ajax-action" data-action="{{ url('admin/article/toggle',['type'=>'cancel_audit']) }}">取消审核</button>
                 <button type="button" class="layui-btn layui-btn-danger layui-btn-small ajax-action" data-action="{{ url('admin/article/delete') }}">删除</button>
