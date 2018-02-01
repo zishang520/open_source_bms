@@ -14,7 +14,7 @@ class ArticleUpdate extends Validate
 
     protected $message = [
         'id.require' => '文章ID不能为空',
-        'id.number' => '文章ID格斯错误',
+        'id.number' => '文章ID格式错误',
         'cid.require'   => '请选择所属栏目',
         'title.require' => '请输入标题',
         'sort.require'  => '请输入排序',

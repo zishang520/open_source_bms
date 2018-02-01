@@ -14,7 +14,7 @@ class NavUpdate extends Validate
 
     protected $message = [
         'id.require' => '导航ID不能为空',
-        'id.number' => '导航ID格斯错误',
+        'id.number' => '导航ID格式错误',
         'pid.require' => '请选择上级导航',
         'name.require' => '请输入导航名称',
         'sort.require' => '请输入排序',

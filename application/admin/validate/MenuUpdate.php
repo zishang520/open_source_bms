@@ -15,7 +15,7 @@ class MenuUpdate extends Validate
 
     protected $message = [
         'id.require' => '菜单ID不能为空',
-        'id.number' => '菜单ID格斯错误',
+        'id.number' => '菜单ID格式错误',
         'pid.require' => '请选择上级菜单',
         'title.require' => '请输入菜单名称',
         'name.require' => '请输入控制器方法',

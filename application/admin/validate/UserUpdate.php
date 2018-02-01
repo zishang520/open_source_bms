@@ -17,7 +17,7 @@ class UserUpdate extends Validate
 
     protected $message = [
         'id.require' => '用户ID不能为空',
-        'id.number' => '用户ID格斯错误',
+        'id.number' => '用户ID格式错误',
         'username.require' => '请输入用户名',
         'username.unique' => '用户名已存在',
         'password.confirm' => '两次输入密码不一致',

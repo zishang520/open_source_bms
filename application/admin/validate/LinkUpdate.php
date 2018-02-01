@@ -17,7 +17,7 @@ class LinkUpdate extends Validate
 
     protected $message = [
         'id.require' => '链接ID不能为空',
-        'id.number' => '链接ID格斯错误',
+        'id.number' => '链接ID格式错误',
         'name.require' => '请输入名称',
     ];
 }

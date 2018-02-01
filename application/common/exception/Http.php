@@ -5,6 +5,7 @@ use Exception;
 use think\App;
 use think\exception\Handle;
 use think\Request;
+use think\Env;
 
 class Http extends Handle
 {
@@ -31,7 +32,7 @@ class Http extends Handle
                     'code' => $this->getCode($exception),
                     'message' => $this->getMessage($exception),
                 ],
-            ]);
+            ], 200, Env::get('API_CROSS', false) ? ['Access-Control-Allow-Origin' => '*'] : []);
         }
         // 其他错误交给系统处理
         return parent::render($exception);

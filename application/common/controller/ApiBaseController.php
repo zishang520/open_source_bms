@@ -3,6 +3,7 @@
 namespace app\common\controller;
 
 use think\Controller;
+use think\Env;
 
 class ApiBaseController extends Controller
 {
@@ -22,7 +23,7 @@ class ApiBaseController extends Controller
             'code' => $code,
             'msg' => $msg,
             'data' => $data,
-        ]);
+        ], 200, Env::get('API_CROSS', false) ? ['Access-Control-Allow-Origin' => '*'] : []);
     }
 
     /**

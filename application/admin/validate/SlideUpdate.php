@@ -19,7 +19,7 @@ class SlideUpdate extends Validate
 
     protected $message = [
         'id.require' => '轮播图ID不能为空',
-        'id.number' => '轮播图ID格斯错误',
+        'id.number' => '轮播图ID格式错误',
         'cid.require' => '请选择所属分类',
         'name.require' => '请输入名称',
         'sort.require' => '请输入排序',
