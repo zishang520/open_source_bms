@@ -41,19 +41,19 @@ trait EntrustUserTrait
     {
         parent::init();
         static::beforeInsert(function ($role) {
-            Cache::tag(Config::get('entrust.role_user_table'))->clear();
+            Cache::clear(Config::get('entrust.role_user_table'));
             return true;
         });
         static::beforeUpdate(function ($role) {
-            Cache::tag(Config::get('entrust.role_user_table'))->clear();
+            Cache::clear(Config::get('entrust.role_user_table'));
             return true;
         });
         static::beforeWrite(function ($role) {
-            Cache::tag(Config::get('entrust.role_user_table'))->clear();
+            Cache::clear(Config::get('entrust.role_user_table'));
             return true;
         });
         static::beforeDelete(function ($role) {
-            Cache::tag(Config::get('entrust.role_user_table'))->clear();
+            Cache::clear(Config::get('entrust.role_user_table'));
             return true;
         });
     }
@@ -235,7 +235,7 @@ trait EntrustUserTrait
             } else {
                 $this->roles()->detach();
             }
-            Cache::tag(Config::get('entrust.role_user_table'))->clear();
+            Cache::clear(Config::get('entrust.role_user_table'));
         } catch (\Exception $e) {
             throw $e;
             return false;

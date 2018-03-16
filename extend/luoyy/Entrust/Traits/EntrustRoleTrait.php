@@ -65,19 +65,19 @@ trait EntrustRoleTrait
             return true;
         });
         static::afterInsert(function ($role) {
-            Cache::tag(Config::get('entrust.permission_role_table'))->clear();
+            Cache::clear(Config::get('entrust.permission_role_table'));
             return true;
         });
         static::afterUpdate(function ($role) {
-            Cache::tag(Config::get('entrust.permission_role_table'))->clear();
+            Cache::clear(Config::get('entrust.permission_role_table'));
             return true;
         });
         static::afterWrite(function ($role) {
-            Cache::tag(Config::get('entrust.permission_role_table'))->clear();
+            Cache::clear(Config::get('entrust.permission_role_table'));
             return true;
         });
         static::afterDelete(function ($role) {
-            Cache::tag(Config::get('entrust.permission_role_table'))->clear();
+            Cache::clear(Config::get('entrust.permission_role_table'));
             return true;
         });
     }
@@ -133,7 +133,7 @@ trait EntrustRoleTrait
             } else {
                 $this->perms()->detach();
             }
-            Cache::tag(Config::get('entrust.permission_role_table'))->clear();
+            Cache::clear(Config::get('entrust.permission_role_table'));
             return true;
         } catch (\Exception $e) {
             throw $e;
