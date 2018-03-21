@@ -20,7 +20,7 @@ trait EntrustRoleTrait
     {
         $rolePrimaryKey = $this->getPk();
         $cacheKey = 'entrust_permissions_for_role_' . $this->$rolePrimaryKey;
-        return Cache::tag(Config::get('entrust.permission_role_table'))->remember($cacheKey, function () {
+        return Cache::remember($cacheKey, function () {
             return $this->perms()->select();
         }, Config::get('cache.ttl', 60));
     }
@@ -65,19 +65,19 @@ trait EntrustRoleTrait
             return true;
         });
         static::afterInsert(function ($role) {
-            Cache::clear(Config::get('entrust.permission_role_table'));
+            Cache::rm('entrust_permissions_for_role_' . $role->{$role->getPk()});
             return true;
         });
         static::afterUpdate(function ($role) {
-            Cache::clear(Config::get('entrust.permission_role_table'));
+            Cache::rm('entrust_permissions_for_role_' . $role->{$role->getPk()});
             return true;
         });
         static::afterWrite(function ($role) {
-            Cache::clear(Config::get('entrust.permission_role_table'));
+            Cache::rm('entrust_permissions_for_role_' . $role->{$role->getPk()});
             return true;
         });
         static::afterDelete(function ($role) {
-            Cache::clear(Config::get('entrust.permission_role_table'));
+            Cache::rm('entrust_permissions_for_role_' . $role->{$role->getPk()});
             return true;
         });
     }
@@ -133,7 +133,7 @@ trait EntrustRoleTrait
             } else {
                 $this->perms()->detach();
             }
-            Cache::clear(Config::get('entrust.permission_role_table'));
+            Cache::rm('entrust_permissions_for_role_' . $this->{$this->getPk()});
             return true;
         } catch (\Exception $e) {
             throw $e;

@@ -2,6 +2,7 @@
 
 namespace app\common\model;
 
+use think\Cache;
 use think\Model;
 
 /**
@@ -45,5 +46,26 @@ class System extends Model
         } else {
             return $this->isUpdate(false)->save($where + $data, []);
         }
+    }
+
+    public static function init()
+    {
+        parent::init();
+        static::afterInsert(function ($role) {
+            Cache::rm('system');
+            return true;
+        });
+        static::afterUpdate(function ($role) {
+            Cache::rm('system');
+            return true;
+        });
+        static::afterWrite(function ($role) {
+            Cache::rm('system');
+            return true;
+        });
+        static::afterDelete(function ($role) {
+            Cache::rm('system');
+            return true;
+        });
     }
 }
