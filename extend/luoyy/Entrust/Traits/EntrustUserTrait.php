@@ -249,7 +249,7 @@ trait EntrustUserTrait
     public function attachRole($role)
     {
         if (is_object($role)) {
-            $role = $role->getKey();
+            $role = $role->{$role->getPk()};
         }
 
         if (is_array($role)) {
@@ -267,7 +267,7 @@ trait EntrustUserTrait
     public function detachRole($role)
     {
         if (is_object($role)) {
-            $role = $role->getKey();
+            $role = $role->{$role->getPk()};
         }
 
         if (is_array($role)) {
@@ -297,7 +297,7 @@ trait EntrustUserTrait
     public function detachRoles($roles = null)
     {
         if (!$roles) {
-            $roles = $this->roles()->get();
+            $roles = $this->roles()->select();
         }
 
         foreach ($roles as $role) {

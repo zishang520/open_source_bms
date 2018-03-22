@@ -151,7 +151,7 @@ trait EntrustRoleTrait
     public function attachPermission($permission)
     {
         if (is_object($permission)) {
-            $permission = $permission->getKey();
+            $permission = $permission->{$permission->getPk()};
         }
 
         if (is_array($permission)) {
@@ -171,7 +171,7 @@ trait EntrustRoleTrait
     public function detachPermission($permission)
     {
         if (is_object($permission)) {
-            $permission = $permission->getKey();
+            $permission = $permission->{$permission->getPk()};
         }
 
         if (is_array($permission)) {
