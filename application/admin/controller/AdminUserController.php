@@ -116,7 +116,7 @@ class AdminUserController extends AdminBaseController
         if ($id == 1) {
             return $this->error('默认管理员不可删除');
         }
-        $admin_user = $this->admin_user_model->where(['id' => $id])->find();
+        $admin_user = AdminUser::where(['id' => $id])->find();
         if (empty($admin_user)) {
             return $this->error('管理员信息获取失败');
         }
