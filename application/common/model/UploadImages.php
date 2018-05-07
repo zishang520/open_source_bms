@@ -19,6 +19,22 @@ use think\Model;
  */
 class UploadImages extends Model
 {
+
+    /**
+     * [$insert 插入]
+     * @var [type]
+     */
+    protected $insert = ['created_at'];
+
+    /**
+     * [setCreatedAtAttr 自动插入时间]
+     * @DateTime  2017-08-11T14:46:30+0800
+     */
+    protected function setCreatedAtAttr()
+    {
+        return date('Y-m-d H:i:s');
+    }
+
     /**
      * @param File $file
      * @param string $uploadPath

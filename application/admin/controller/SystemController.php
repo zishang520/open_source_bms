@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 use app\common\controller\AdminBaseController;
 use app\common\model\System;
+use think\Cache;
 use think\Request;
 
 /**
@@ -47,7 +48,7 @@ class SystemController extends AdminBaseController
      */
     public function clear()
     {
-        if (delete_dir_file(CACHE_PATH) || delete_dir_file(TEMP_PATH)) {
+        if (delete_dir_file(CACHE_PATH) || delete_dir_file(TEMP_PATH) || Cache::clear()) {
             return $this->success('清除缓存成功');
         } else {
             return $this->error('清除缓存失败');

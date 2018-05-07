@@ -96,7 +96,7 @@ class SlideCategoryController extends AdminBaseController
      */
     public function delete($id)
     {
-        if (SlideCategory::delete($id) !== false) {
+        if (SlideCategory::destroy($id) !== false) {
             return $this->success('删除成功');
         } else {
             return $this->error('删除失败');

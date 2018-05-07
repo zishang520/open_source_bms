@@ -37,9 +37,9 @@ function get_articles_by_cid($cid, $limit = 10, $where = [], $order = [], $filed
     $ids = Db::name('category')->where(['path' => ['like', "%,{$cid},%"]])->column('id');
     $ids = (!empty($ids) && is_array($ids)) ? implode(',', $ids) . ',' . $cid : $cid;
 
-    $fileds = array_merge(['id', 'cid', 'title', 'introduction', 'thumb', 'reading', 'publish_time'], (array)$filed);
-    $map    = array_merge(['cid' => ['IN', $ids], 'status' => 1, 'publish_time' => ['<= time', date('Y-m-d H:i:s')]], (array)$where);
-    $sort   = array_merge(['is_top' => 'DESC', 'sort' => 'DESC', 'publish_time' => 'DESC'], (array)$order);
+    $fileds = array_merge(['id', 'cid', 'title', 'introduction', 'thumb', 'reading', 'publish_time'], (array) $filed);
+    $map = array_merge(['cid' => ['IN', $ids], 'status' => 1, 'publish_time' => ['<= time', date('Y-m-d H:i:s')]], (array) $where);
+    $sort = array_merge(['is_top' => 'DESC', 'sort' => 'DESC', 'publish_time' => 'DESC'], (array) $order);
 
     $article_list = Db::name('article')->where($map)->field($fileds)->order($sort)->limit($limit)->select();
 
@@ -64,9 +64,9 @@ function get_articles_by_cid_paged($cid, $page_size = 15, $where = [], $order = 
     $ids = Db::name('category')->where(['path' => ['like', "%,{$cid},%"]])->column('id');
     $ids = (!empty($ids) && is_array($ids)) ? implode(',', $ids) . ',' . $cid : $cid;
 
-    $fileds = array_merge(['id', 'cid', 'title', 'introduction', 'thumb', 'reading', 'publish_time'], (array)$filed);
-    $map    = array_merge(['cid' => ['IN', $ids], 'status' => 1, 'publish_time' => ['<= time', date('Y-m-d H:i:s')]], (array)$where);
-    $sort   = array_merge(['is_top' => 'DESC', 'sort' => 'DESC', 'publish_time' => 'DESC'], (array)$order);
+    $fileds = array_merge(['id', 'cid', 'title', 'introduction', 'thumb', 'reading', 'publish_time'], (array) $filed);
+    $map = array_merge(['cid' => ['IN', $ids], 'status' => 1, 'publish_time' => ['<= time', date('Y-m-d H:i:s')]], (array) $where);
+    $sort = array_merge(['is_top' => 'DESC', 'sort' => 'DESC', 'publish_time' => 'DESC'], (array) $order);
 
     $article_list = Db::name('article')->where($map)->field($fileds)->order($sort)->paginate($page_size);
 
@@ -163,8 +163,10 @@ function array_child_append($parent, $pid, $child, $child_key_name)
 {
     foreach ($parent as &$item) {
         if ($item['id'] == $pid) {
-            if (!isset($item[$child_key_name]))
+            if (!isset($item[$child_key_name])) {
                 $item[$child_key_name] = [];
+            }
+
             $item[$child_key_name][] = $child;
         }
     }
@@ -248,9 +250,7 @@ function check_mobile_number($mobile)
 
 /**
  * [hidden_mobile 隐藏手机号中间4位]
- * @Author    ZiShang520@gmail.com
  * @DateTime  2017-09-18T17:15:39+0800
- * @copyright (c)                      ZiShang520 All           Rights Reserved
  * @param     [type]                   $mobile    [description]
  * @return    [type]                              [description]
  */
@@ -301,25 +301,68 @@ function subString($strings, $start, $length)
         return $str;
     }
 }
+
 /**
  * [my_date_diff 时间验证器]
- * @Author    ZiShang520@gmail.com
  * @DateTime  2017-09-22T11:26:00+0800
- * @copyright (c)                      ZiShang520 All           Rights Reserved
  * @param     [type]                   $data2     [description]
  * @return    [type]                              [description]
  */
 function my_date_diff($data2)
 {
-    return intval((new DateTime(date('Y-m-d')))->diff(new DateTime($data2))->format('%R%a'));
+    return (int) (new DateTime(date('Y-m-d')))->diff(new DateTime($data2))->format('%R%a');
+}
+
+/**
+ * [TimeRange 获取三个时间的时间范围]
+ * @DateTime  2018-03-06T10:58:02+0800
+
+ * @param     [type] $start [description]
+ * @param     [type] $middle [description]
+ * @param     [type] $end [description]
+ */
+function TimeRange($start, $middle, $end, $time = null)
+{
+    $time = is_null($time) ? time() : (int) $time;
+    $s = call_user_func_array([(new DateTime())->setTimestamp($time), 'setTime'], array_map('intval', explode(':', $start)));
+    $m = call_user_func_array([(new DateTime())->setTimestamp($time), 'setTime'], array_map('intval', explode(':', $middle)));
+    $e = call_user_func_array([(new DateTime())->setTimestamp($time), 'setTime'], array_map('intval', explode(':', $end)));
+    if ($time < $s->getTimestamp()) {
+        $s->sub(new DateInterval('P1D'));
+        $m->sub(new DateInterval('P1D'));
+        $e->sub(new DateInterval('P1D'));
+    }
+    if (((int) $m->diff($e)->format('%r%h')) < 0) {
+        $e->add(new DateInterval('P1D'));
+    }
+    return ['start' => $s->getTimestamp(), 'end' => $e->getTimestamp()];
+}
+/**
+ * [field_info 获取字段的信息]
+ * @DateTime  2018-01-26T13:53:03+0800
+
+ * @param     [type] $name [description]
+ * @param     [type] $key [description]
+ * @return    [type] [description]
+ */
+function field_info($name, $key = null, $array_flip = false)
+{
+    $array = config('field');
+    if (is_array($array) && array_key_exists($name, $array)) {
+        $data = $array_flip ? array_flip($array[$name]) : $array[$name];
+        if (is_null($key)) {
+            return $data;
+        }
+        if (array_key_exists($key, $data)) {
+            return $data[$key];
+        }
+    }
 }
 
 if (!function_exists('random_int')) {
     /**
      * [random_int Random_int兼容低版本]
-     * @Author    ZiShang520@gmail.com
      * @DateTime  2017-10-25T13:23:19+0800
-     * @copyright (c)                      ZiShang520 All           Rights Reserved
      * @param     [type]                   $min       [description]
      * @param     [type]                   $max       [description]
      * @return    [type]                              [description]
@@ -369,4 +412,44 @@ if (!function_exists('random_int')) {
 
         return $result + $min;
     }
+}
+
+/**
+ * [rand_uuid 获取随机的字串]
+ * @DateTime  2018-03-12T13:50:29+0800
+
+ * @param     integer $length [description]
+ * @return    [type] [description]
+ */
+function rand_uuid($length = 6)
+{
+    return substr(strtoupper(md5(uniqid(md5(uniqid()), true))), random_int(0, 26), $length);
+}
+
+/**
+ * [product_point 获取涨跌的点数]
+ * @DateTime  2018-03-14T16:04:50+0800
+
+ * @param     [type] $current [description]
+ * @param     [type] $yesterday [description]
+ * @param     [type] $decimal [description]
+ * @return    [type] [description]
+ */
+function product_point($current, $yesterday, $decimal)
+{
+    $current = number_format($current, $decimal, '.', '');
+    $yesterday = number_format($yesterday, $decimal, '.', '');
+    return (int) call_user_func_array('bcsub', str_replace('.', '', [$current, $yesterday]));
+}
+
+/**
+ * [diff_now_date 时间  验证器]
+ * @DateTime  2018-03-23T16:15:54+0800
+ * @param     [type] $datetime [description]
+ * @param     [type] $time [description]
+ * @return    [type] [description]
+ */
+function diff_now_date($datetime, $time)
+{
+    return (call_user_func_array([(new DateTime($datetime))->add(new DateInterval('P1D')), 'setTime'], array_map('intval', explode(':', $time)))->getTimestamp() <= (new DateTime())->getTimestamp());
 }

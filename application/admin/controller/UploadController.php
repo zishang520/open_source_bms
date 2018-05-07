@@ -1,5 +1,5 @@
 <?php
-namespace app\api\controller;
+namespace app\admin\controller;
 
 use app\common\model\UploadImages;
 use think\Controller;
@@ -9,7 +9,7 @@ use think\Session;
 /**
  * 通用上传接口
  * Class Upload
- * @package app\api\controller
+ * @package app\admin\controller
  */
 class UploadController extends Controller
 {
@@ -56,7 +56,7 @@ class UploadController extends Controller
                 'message' => $file->getError(),
             ]);
         }
-        $upload_path = str_replace(DS, '/', ROOT_PATH . 'public/uploads');
+        $upload_path = str_replace(DIRECTORY_SEPARATOR, '/', ROOT_PATH . 'public/uploads');
         $save_path = '/uploads/';
         $upload = new UploadImages();
         $info = $upload->upload($file, $upload_path, $save_path);

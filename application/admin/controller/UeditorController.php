@@ -1,5 +1,5 @@
 <?php
-namespace app\api\controller;
+namespace app\admin\controller;
 
 use luoyy\JSObject\JSON;
 use org\UeditorUpload;
@@ -9,7 +9,7 @@ use think\Session;
 /**
  * Ueditor编辑器统一上传接口
  * Class Ueditor
- * @package app\api\controller
+ * @package app\admin\controller
  */
 class UeditorController extends Controller
 {

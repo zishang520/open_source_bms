@@ -52,4 +52,9 @@ class HomeBaseController extends Controller
         });
         $this->assign('slide', $slide);
     }
+
+    public function _empty()
+    {
+        return $this->error('访问的页面不存在');
+    }
 }

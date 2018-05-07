@@ -155,34 +155,35 @@ return [
         // 模板引擎类型 支持 php think 支持扩展
         'type' => 'Blade',
         // 视图基础目录（集中式）
-        'view_base' => ROOT_PATH . 'resources' . DS . 'views' . DS,
+        'view_base' => ROOT_PATH . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
         // 模板起始路径
-        'view_path' => ROOT_PATH . 'resources' . DS . 'views' . DS,
+        'view_path' => ROOT_PATH . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
         // 模板文件名分隔符
-        'view_depr' => DS,
+        'view_depr' => DIRECTORY_SEPARATOR,
         // 模板缓存目录
-        'view_cache_path' => RUNTIME_PATH . 'temp' . DS,
+        'view_cache_path' => RUNTIME_PATH . 'temp' . DIRECTORY_SEPARATOR,
         // 模板文件后缀
         'view_suffix' => 'blade.php',
         'cache' => [
             'cache_subdir' => false,
             'prefix' => '',
         ],
+        'tpl_replace_string' => [],
     ],
 
     // 手机模板开启
     'mobile_theme' => false,
 
     // 默认跳转页面对应的模板文件
-    'dispatch_success_tmpl' => ROOT_PATH . 'resources' . DS . 'views' . DS . 'common' . DS . 'dispatch_jump.blade.php',
-    'dispatch_error_tmpl' => ROOT_PATH . 'resources' . DS . 'views' . DS . 'common' . DS . 'dispatch_jump.blade.php',
+    'dispatch_success_tmpl' => ROOT_PATH . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'dispatch_jump.blade.php',
+    'dispatch_error_tmpl' => ROOT_PATH . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'dispatch_jump.blade.php',
 
     // +----------------------------------------------------------------------
     // | 异常及错误设置
     // +----------------------------------------------------------------------
 
     // 异常页面的模板文件
-    'exception_tmpl' => ROOT_PATH . 'resources' . DS . 'views' . DS . 'common' . DS . 'think_exception.blade.php',
+    'exception_tmpl' => ROOT_PATH . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'common' . DIRECTORY_SEPARATOR . 'think_exception.blade.php',
 
     // 错误显示信息,非调试模式有效
     'error_message' => '页面错误！请稍后再试～',
@@ -197,7 +198,7 @@ return [
 
     'log' => [
         // 日志记录方式，内置 file socket 支持扩展
-        'type' => 'File',
+        'type' => 'Test',
         // 日志保存目录
         'path' => LOG_PATH,
         // 日志记录级别
@@ -218,15 +219,21 @@ return [
 
     'cache' => [
         // 驱动方式
-        'type' => 'File',
-        // 缓存保存目录
+        'type' => 'Redis',
+        // 缓存保存目录,本地的时候有才有用
         'path' => CACHE_PATH,
         // 缓存前缀
-        'prefix' => '',
+        'prefix' => 'luoyy_',
         // 缓存有效期 0表示永久缓存
         'expire' => 0,
         // tag缓存时间
         'ttl' => 60,
+        'host'       => '127.0.0.1',
+        'port'       => 6379,
+        'password'   => '',
+        'select'     => 0,
+        'timeout'    => 0,
+        'persistent' => false,
     ],
 
     // +----------------------------------------------------------------------

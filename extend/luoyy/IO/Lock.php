@@ -2,59 +2,59 @@
 
 namespace luoyy\IO;
 
-use \Closure;
-
 /**
  * IO流程锁
  */
 class Lock
 {
-
-    /**
-     * 锁文件
-     */
-    const FILE = __DIR__ . '/lockFile.lock';
-
     /**
      * [work 同步锁]
-     * @Author    ZiShang520@gmail.com
      * @DateTime  2017-08-16T16:28:47+0800
-     * @copyright (c)                      ZiShang520 All           Rights Reserved
      * @param     [type]                   $func      [description]
      * @return    [type]                              [description]
      */
-    public static function work(Closure $func)
+    public static function work(callable $func)
     {
-        if ($func instanceof Closure) {
-            $fp = fopen(self::FILE, "r");
+        $result = null;
+        $fp = fopen(__FILE__, "r");
+        try {
             if (flock($fp, LOCK_EX)) {
-                $func();
-                flock($fp, LOCK_UN);
+                try {
+                    $result = call_user_func($func);
+                } finally {
+                    flock($fp, LOCK_UN);
+                }
             }
+        } finally {
             fclose($fp);
+            return $result;
         }
     }
 
     /**
      * [asyncWork 异步锁]
-     * @Author    ZiShang520@gmail.com
      * @DateTime  2017-08-16T16:35:47+0800
-     * @copyright (c)                      ZiShang520 All           Rights Reserved
-     * @param     Closure                  $func      [description]
-     * @param     Closure                  $func2     [description]
+     * @param     callable                  $func      [description]
+     * @param     callable                  $func2     [description]
      * @return    [type]                              [description]
      */
-    public static function asyncWork(Closure $func, Closure $func2)
+    public static function asyncWork(callable $func, callable $func2)
     {
-        if ($func instanceof Closure && $func2 instanceof Closure) {
-            $fp = fopen(self::FILE, "r");
+        $result = null;
+        $fp = fopen(__FILE__, "r");
+        try {
             if (flock($fp, LOCK_EX | LOCK_NB)) {
-                $func();
-                flock($fp, LOCK_UN);
+                try {
+                    $result = call_user_func($func);
+                } finally {
+                    flock($fp, LOCK_UN);
+                }
             } else {
-                $func2();
+                $result = call_user_func($func2);
             }
+        } finally {
             fclose($fp);
+            return $result;
         }
     }
 }

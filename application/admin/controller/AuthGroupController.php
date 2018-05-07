@@ -125,8 +125,8 @@ class AuthGroupController extends AdminBaseController
         $auth_group_data = AuthGroup::where(['id' => $id])->find();
         $auth_rule_list = AuthRule::field('id,pid,title,name')->select()->toArray();
 
-        foreach ($auth_rule_list as $key => $value) {
-            $auth_group_data->hasPermission($value['name']) && $auth_rule_list[$key]['checked'] = true;
+        foreach ($auth_rule_list as &$value) {
+            $auth_group_data->hasPermission($value['name']) && $value['checked'] = true;
         }
 
         return json($auth_rule_list);

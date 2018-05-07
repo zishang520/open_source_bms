@@ -26,7 +26,7 @@ class UserController extends AdminBaseController
             return in_array($k, array_keys($search));
         }, ARRAY_FILTER_USE_KEY);
 
-        if (isset($params['keyword']) && $params['keyword'] != '') {
+        if ($params['keyword'] != '') {
             $map['username|mobile|email'] = ['like', "%{$params['keyword']}%"];
         }
         $user_list = User::where($map)
@@ -78,7 +78,7 @@ class UserController extends AdminBaseController
         if (empty($user)) {
             return $this->error('获取用户信息失败');
         }
-        return $this->fetch('edit', ['user' => $user]);
+        return view('user/edit')->assign('user', $user);
     }
 
     /**
@@ -108,7 +108,7 @@ class UserController extends AdminBaseController
                 if ($user->isUpdate(true)->save() !== false) {
                     return $this->success('更新成功');
                 } else {
-                    return $this->error('更新失败');
+                    return $this->error('更新用户信息失败！');
                 }
             }
         }

@@ -17,7 +17,7 @@ class ApiBaseController extends Controller
      * @param     [data]                   $data      [数据的内容默认为null]
      * @return    [json]                              [返回json数据]
      */
-    protected function dump($code, $msg, $data = null)
+    protected static function dump($code, $msg, $data = null)
     {
         return json([
             'code' => $code,
@@ -35,6 +35,6 @@ class ApiBaseController extends Controller
      */
     public function _empty()
     {
-        return $this->dump(-1, '系统繁忙');
+        return self::dump(-1, '请求地址未找到，请检查你的地址是否正确！');
     }
 }

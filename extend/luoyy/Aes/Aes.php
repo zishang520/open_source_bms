@@ -61,7 +61,11 @@ class Aes
      */
     private function encrypt($contents)
     {
-        return openssl_encrypt($contents, 'AES-128-CBC', hex2bin(self::$ENCRYPTKEY), null, hex2bin(self::$IV));
+        try {
+            return openssl_encrypt($contents, 'AES-128-CBC', hex2bin(self::$ENCRYPTKEY), null, hex2bin(self::$IV));
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -74,13 +78,15 @@ class Aes
      */
     private function decrypt($contents)
     {
-        return openssl_decrypt($contents, 'AES-128-CBC', hex2bin(self::$ENCRYPTKEY), 0, hex2bin(self::$IV));
+        try {
+            return openssl_decrypt($contents, 'AES-128-CBC', hex2bin(self::$ENCRYPTKEY), 0, hex2bin(self::$IV));
+        } catch (\Exception $e) {
+            return false;
+        }
     }
     /**
      * [rc4 rc4加密]
-     * @Author    ZiShang520@gmail.com
      * @DateTime  2017-11-18T17:14:58+0800
-     * @copyright (c)                      ZiShang520 All           Rights Reserved
      * @param     [type]                   $key_str   [description]
      * @param     [type]                   $data_str  [description]
      * @return    [type]                              [description]
